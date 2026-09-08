@@ -321,7 +321,7 @@
             position: relative;
         }
 
-        video, iframe {
+        iframe, video {
             width: 100%;
             height: 100%;
             border: none;
@@ -367,7 +367,7 @@
             
             <!-- Grid de Canales Populares -->
             <div class="channels-grid">
-                <!-- Tu Canal: Miramax TV (Usando reproductor universal seguro) -->
+                <!-- Tu Canal: Miramax TV -->
                 <div class="channel-card" onclick="playChannel('Miramax TV', 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8')">
                     <span class="live-tag">EN VIVO</span>
                     <div class="channel-logo-text" style="color: #a855f7;">🎥 MIRAMAX</div>
@@ -456,8 +456,8 @@
                 <h3 id="modalTitle" style="font-size: 15px;">Reproductor En Vivo</h3>
                 <button class="close-btn" onclick="closePlayer()">&times;</button>
             </div>
-            <div class="video-container" id="playerContainer">
-                <!-- Se inyectará el reproductor dinámicamente -->
+            <div class="video-container" id="videoContainer">
+                <!-- Se inyectará el reproductor seguro mediante iframe -->
             </div>
         </div>
     </div>
@@ -469,53 +469,20 @@
             document.getElementById('clock').innerText = now.toLocaleTimeString();
         }, 1000);
 
-        let hlsInstance = null;
-
-        // Función para reproducir utilizando reproductor universal iframe compatible con streams protegidos
+        // Función para reproducir el canal saltando restricciones CORS mediante visor incrustado seguro
         function playChannel(name, streamUrl) {
             document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
             document.getElementById('videoModal').style.display = 'flex';
 
-            const container = document.getElementById('playerContainer');
+            const container = document.getElementById('videoContainer');
             
-            // Usamos un reproductor web de código abierto embebido compatible con enlaces m3u8 directos
-            container.innerHTML = `<iframe src="https://player.twitch.tv/?channel=none&parent=localhost" style="display:none"></iframe>
-                                   <video id="videoPlayer" controls autoplay style="width:100%;height:100%;background:#000;"></video>`;
-
-            const video = document.getElementById('videoPlayer');
-
-            if (Hls.isSupported()) {
-                if (hlsInstance) {
-                    hlsInstance.destroy();
-                }
-                hlsInstance = new Hls();
-                hlsInstance.loadSource(streamUrl);
-                hlsInstance.attachMedia(video);
-                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log("Clic requerido para reproducir"));
-                });
-                hlsInstance.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        // Si el navegador bloquea por CORS estricto de OpenCaster, usamos visor nativo alternativo
-                        container.innerHTML = `<iframe src="https://image.opencaster.com/player?url=${encodeURIComponent(streamUrl)}" style="width:100%;height:100%;border:none;"></iframe>`;
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = streamUrl;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
-            }
+            // Usamos un reproductor iframe embebido universal compatible con enlaces m3u8 directos
+            container.innerHTML = `<iframe src="https://image.opencaster.com/player?url=${encodeURIComponent(streamUrl)}" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
         }
 
         // Cerrar reproductor
         function closePlayer() {
-            const container = document.getElementById('playerContainer');
-            container.innerHTML = "";
-            if (hlsInstance) {
-                hlsInstance.destroy();
-                hlsInstance = null;
-            }
+            document.getElementById('videoContainer').innerHTML = "";
             document.getElementById('videoModal').style.display = 'none';
         }
 
