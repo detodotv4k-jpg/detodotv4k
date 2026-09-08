@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeTodoTV4K - Televisión y Streaming en Vivo</title>
-    <!-- Librería HLS.js oficial -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
             --bg-color: #0b0514;
@@ -321,9 +319,10 @@
             position: relative;
         }
 
-        video {
+        iframe {
             width: 100%;
             height: 100%;
+            border: none;
             outline: none;
         }
     </style>
@@ -366,7 +365,7 @@
             
             <!-- Grid de Canales Populares -->
             <div class="channels-grid">
-                <!-- Tu Canal: Miramax TV -->
+                <!-- Tu Canal: Miramax TV (Reproducción directa mediante reproductor universal embed) -->
                 <div class="channel-card" onclick="playChannel('Miramax TV', 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8')">
                     <span class="live-tag">EN VIVO</span>
                     <div class="channel-logo-text" style="color: #a855f7;">🎥 MIRAMAX</div>
@@ -455,8 +454,8 @@
                 <h3 id="modalTitle" style="font-size: 15px;">Reproductor En Vivo</h3>
                 <button class="close-btn" onclick="closePlayer()">&times;</button>
             </div>
-            <div class="video-container">
-                <video id="videoPlayer" controls autoplay></video>
+            <div class="video-container" id="videoContainer">
+                <!-- Se inyectará el reproductor universal seguro -->
             </div>
         </div>
     </div>
@@ -468,42 +467,20 @@
             document.getElementById('clock').innerText = now.toLocaleTimeString();
         }, 1000);
 
-        let hlsInstance = null;
-
-        // Función para reproducir el canal de forma nativa con HLS.js
+        // Función para abrir la transmisión mediante reproductor embed universal seguro
         function playChannel(name, streamUrl) {
             document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
             document.getElementById('videoModal').style.display = 'flex';
 
-            const video = document.getElementById('videoPlayer');
-
-            if (Hls.isSupported()) {
-                if (hlsInstance) {
-                    hlsInstance.destroy();
-                }
-                hlsInstance = new Hls();
-                hlsInstance.loadSource(streamUrl);
-                hlsInstance.attachMedia(video);
-                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log("Reproducción automática bloqueada por el navegador"));
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = streamUrl;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
-            }
+            const container = document.getElementById('videoContainer');
+            
+            // Usamos un reproductor HLS web universal incrustado que procesa y renderiza el flujo correctamente
+            container.innerHTML = `<iframe src="https://vidstack.io/player?src=${encodeURIComponent(streamUrl)}" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
         }
 
         // Cerrar reproductor
         function closePlayer() {
-            const video = document.getElementById('videoPlayer');
-            video.pause();
-            video.src = "";
-            if (hlsInstance) {
-                hlsInstance.destroy();
-                hlsInstance = null;
-            }
+            document.getElementById('videoContainer').innerHTML = "";
             document.getElementById('videoModal').style.display = 'none';
         }
 
