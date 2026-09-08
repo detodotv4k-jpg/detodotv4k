@@ -362,11 +362,11 @@
 
         <!-- Cuerpo con Canales y Categorías -->
         <div class="content-body">
-            <h2>🔥 Canales Populares y Señales del Perú</h2>
+            <h2>🔥 Canales Populares y Señales Libres</h2>
             
-            <!-- Grid de Canales Populares -->
+            <!-- Grid de Canales Populares (Incluyendo tu canal y más de 15 canales libres) -->
             <div class="channels-grid">
-                <!-- Tu Canal: Miramax TV -->
+                <!-- 1. Tu Canal: Miramax TV -->
                 <div class="channel-card" onclick="playChannel('Miramax TV', 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8')">
                     <span class="live-tag">EN VIVO</span>
                     <div class="channel-logo-text" style="color: #a855f7;">🎥 MIRAMAX</div>
@@ -374,7 +374,7 @@
                     <div class="channel-views">Señal Principal</div>
                 </div>
 
-                <!-- NASA TV -->
+                <!-- 2. NASA TV -->
                 <div class="channel-card" onclick="playChannel('NASA TV HD', 'https://nasa-i.akamaihd.net/hls/live/508875/NASA-HDTV-Public/master.m3u8')">
                     <span class="live-tag">EN VIVO</span>
                     <div class="channel-logo-text" style="color: #38bdf8;">NASA</div>
@@ -382,20 +382,116 @@
                     <div class="channel-views">Transmisión Espacial</div>
                 </div>
 
-                <!-- France 24 Español -->
+                <!-- 3. France 24 Español -->
                 <div class="channel-card" onclick="playChannel('France 24 Español', 'https://static.france24.com/live/F24_ES_HI_HLS/live_web.m3u8')">
                     <span class="live-tag">EN VIVO</span>
                     <div class="channel-logo-text" style="color: #60a5fa;">F24</div>
-                    <div class="channel-name">France 24</div>
+                    <div class="channel-name">France 24 Español</div>
                     <div class="channel-views">Noticias 24/7</div>
                 </div>
 
-                <!-- DW Español -->
+                <!-- 4. DW Español -->
                 <div class="channel-card" onclick="playChannel('DW Español', 'https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8')">
                     <span class="live-tag">EN VIVO</span>
                     <div class="channel-logo-text" style="color: #facc15;">DW</div>
                     <div class="channel-name">DW en Español</div>
                     <div class="channel-views">Internacional</div>
+                </div>
+
+                <!-- 5. RT en Español -->
+                <div class="channel-card" onclick="playChannel('RT en Español', 'https://rt-esp.live.rt.com/live/rtesp/playlist.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #ef4444;">RT</div>
+                    <div class="channel-name">RT en Español</div>
+                    <div class="channel-views">Actualidad</div>
+                </div>
+
+                <!-- 6. TeleSUR -->
+                <div class="channel-card" onclick="playChannel('TeleSUR', 'https://video-edge-4c59d2.telequirk.com/hls/telesur_live.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #f97316;">TELESUR</div>
+                    <div class="channel-name">TeleSUR TV</div>
+                    <div class="channel-views">Noticias Latinoamericanas</div>
+                </div>
+
+                <!-- 7. CGTN Español -->
+                <div class="channel-card" onclick="playChannel('CGTN Español', 'https://news.cgtn.com/resource/live/espanol/cgtn-espanol.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #38bdf8;">CGTN</div>
+                    <div class="channel-name">CGTN Español</div>
+                    <div class="channel-views">Global TV</div>
+                </div>
+
+                <!-- 8. Euronews Español -->
+                <div class="channel-card" onclick="playChannel('Euronews Español', 'https://euronews-euronews-spanish-1-us.rakuten.wurl.tv/playlist.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #a855f7;">EURONEWS</div>
+                    <div class="channel-name">Euronews Español</div>
+                    <div class="channel-views">Europa al Día</div>
+                </div>
+
+                <!-- 9. Al Jazeera English -->
+                <div class="channel-card" onclick="playChannel('Al Jazeera', 'https://live-hls-web-aje.getaj.net/AJE/03.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #eab308;">AJE</div>
+                    <div class="channel-name">Al Jazeera English</div>
+                    <div class="channel-views">Global News</div>
+                </div>
+
+                <!-- 10. Bloomberg TV -->
+                <div class="channel-card" onclick="playChannel('Bloomberg TV', 'https://bloomberg.map.fastly.net/live/manifest.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #3b82f6;">BLOOMBERG</div>
+                    <div class="channel-name">Bloomberg TV</div>
+                    <div class="channel-views">Economía y Finanzas</div>
+                </div>
+
+                <!-- 11. Red Bull TV -->
+                <div class="channel-card" onclick="playChannel('Red Bull TV', 'https://rbmn-live.akamaized.net/hls/live/590964/redbull-app-international/master.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #ef4444;">REDBULL</div>
+                    <div class="channel-name">Red Bull TV</div>
+                    <div class="channel-views">Deportes Extremos</div>
+                </div>
+
+                <!-- 12. Fashion TV -->
+                <div class="channel-card" onclick="playChannel('Fashion TV', 'https://fash1014.cloudycdn.services/slive/ftv_hd_720p/playlist.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #ec4899;">FTV</div>
+                    <div class="channel-name">Fashion TV</div>
+                    <div class="channel-views">Moda y Estilo</div>
+                </div>
+
+                <!-- 13. Unife TV -->
+                <div class="channel-card" onclick="playChannel('Unife TV', 'https://live-s1.unife.tv/hls/unife.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #10b981;">UNIFE</div>
+                    <div class="channel-name">Unife TV</div>
+                    <div class="channel-views">Variedad y Entretenimiento</div>
+                </div>
+
+                <!-- 14. Canal Parlamentario / Institucional -->
+                <div class="channel-card" onclick="playChannel('Canal Institucional', 'https://video-edge-4c59d2.telequirk.com/hls/congreso_live.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #6366f1;">CONGRESO</div>
+                    <div class="channel-name">Canal Institucional</div>
+                    <div class="channel-views">Señal Pública</div>
+                </div>
+
+                <!-- 15. NASA Media Channel -->
+                <div class="channel-card" onclick="playChannel('NASA Media', 'https://nasa-i.akamaihd.net/hls/live/508875/NASA-HDTV-Public/index.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #06b6d4;">NASA 2</div>
+                    <div class="channel-name">NASA Media Channel</div>
+                    <div class="channel-views">Documentales Científicos</div>
+                </div>
+
+                <!-- 16. LocalNow (Cine y Series Gratis) -->
+                <div class="channel-card" onclick="playChannel('LocalNow Movies', 'https://localnow-localnow-1-us.rakuten.wurl.tv/playlist.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #8b5cf6;">MOVIES</div>
+                    <div class="channel-name">LocalNow Cine</div>
+                    <div class="channel-views">Películas y Entretenimiento</div>
                 </div>
             </div>
 
@@ -470,7 +566,7 @@
 
         let hlsInstance = null;
 
-        // Función para reproducir utilizando la librería oficial HLS.js con soporte nativo de respaldo
+        // Función para reproducir el canal con HLS.js
         function playChannel(name, streamUrl) {
             document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
             document.getElementById('videoModal').style.display = 'flex';
@@ -484,7 +580,6 @@
                 hlsInstance = new Hls({
                     debug: false,
                     xhrSetup: function (xhr, url) {
-                        // Optimización para evitar bloqueos en streams protegidos
                         xhr.withCredentials = false;
                     }
                 });
@@ -492,7 +587,7 @@
                 hlsInstance.attachMedia(video);
                 hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
                     video.play().catch(error => {
-                        console.log("Reproducción automática bloqueada, requiere interacción del usuario.");
+                        console.log("Reproducción automática bloqueada, haga clic en play.");
                     });
                 });
                 
@@ -500,11 +595,9 @@
                     if (data.fatal) {
                         switch (data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.log("Error de red intentando recuperar...");
                                 hlsInstance.startLoad();
                                 break;
                             case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.log("Error de medios intentando recuperar...");
                                 hlsInstance.recoverMediaError();
                                 break;
                             default:
@@ -514,7 +607,6 @@
                     }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Soporte nativo para dispositivos Apple (Safari/iOS)
                 video.src = streamUrl;
                 video.addEventListener('loadedmetadata', function() {
                     video.play();
@@ -522,7 +614,7 @@
             }
         }
 
-        // Cerrar reproductor y detener descarga de video
+        // Cerrar reproductor
         function closePlayer() {
             const video = document.getElementById('videoPlayer');
             video.pause();
