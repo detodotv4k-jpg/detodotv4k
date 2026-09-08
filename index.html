@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeTodoTV4K - Televisión, Perú y Streaming en Vivo</title>
+    <title>DeTodoTV4K - TV, Películas y Series en Vivo</title>
     <!-- Librería HLS.js oficial para streaming -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
@@ -32,7 +32,7 @@
             overflow: hidden;
         }
 
-        /* Barra Lateral (Sidebar) */
+        /* Barra Lateral (Sidebar) Interactiva */
         aside {
             width: 80px;
             background-color: var(--sidebar-color);
@@ -45,18 +45,13 @@
         }
 
         .sidebar-top {
-            margin-bottom: 30px;
-        }
-
-        .sidebar-icon-top {
-            color: white;
-            cursor: pointer;
+            margin-bottom: 20px;
         }
 
         .menu-items {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 10px;
             width: 100%;
         }
 
@@ -68,14 +63,14 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 10px 0;
+            padding: 12px 0;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.2s;
         }
 
         .menu-item:hover, .menu-item.active {
             color: var(--text-color);
-            background-color: rgba(124, 58, 237, 0.2);
+            background-color: rgba(124, 58, 237, 0.25);
             border-left: 3px solid var(--accent-color);
         }
 
@@ -138,9 +133,17 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Cuerpo */
+        /* Cuerpo de Secciones */
         .content-body {
             padding: 30px 40px;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
         }
 
         h2 {
@@ -157,7 +160,7 @@
             margin-top: 0;
         }
 
-        /* Grid de Canales */
+        /* Grid de Tarjetas (Estilo Netflix) */
         .channels-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -193,6 +196,18 @@
             font-weight: bold;
         }
 
+        .movie-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #7c3aed;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
         .channel-logo-text {
             font-size: 16px;
             font-weight: bold;
@@ -213,7 +228,7 @@
             margin-top: 4px;
         }
 
-        /* Sección Categorías Generales */
+        /* Categorías Generales */
         .categories-section {
             background-color: var(--sidebar-color);
             padding: 25px;
@@ -335,7 +350,7 @@
 </head>
 <body>
 
-    <!-- Menú Lateral (Sidebar) -->
+    <!-- Menú Lateral (Sidebar) Interactivo -->
     <aside>
         <div class="sidebar-top">
             <div class="sidebar-icon-top">
@@ -343,14 +358,30 @@
             </div>
         </div>
         <div class="menu-items">
-            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Inicio</a>
-            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>Servicios</a>
-            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>Api</a>
-            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>Favoritos</a>
-            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Eventos</a>
-            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>Películas</a>
-            <a class="menu-item active"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 12h20M2 7h20M2 17h20"></path></svg>Television</a>
-            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>DMCA</a>
+            <a class="menu-item active" onclick="switchView('inicio', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Inicio
+            </a>
+            <a class="menu-item" onclick="switchView('servicios', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>Servicios
+            </a>
+            <a class="menu-item" onclick="switchView('api', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>Api
+            </a>
+            <a class="menu-item" onclick="switchView('favoritos', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>Favoritos
+            </a>
+            <a class="menu-item" onclick="switchView('eventos', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Eventos
+            </a>
+            <a class="menu-item" onclick="switchView('peliculas', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>Películas
+            </a>
+            <a class="menu-item" onclick="switchView('television', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 12h20M2 7h20M2 17h20"></path></svg>Television
+            </a>
+            <a class="menu-item" onclick="switchView('dmca', this)">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>DMCA
+            </a>
         </div>
     </aside>
 
@@ -360,186 +391,176 @@
         <header>
             <div class="logo">DeTodo<span>TV4K</span></div>
             <div class="header-right">
-                <div class="badge-ad">🇵🇪 TV Nacional & Perú</div>
+                <div class="badge-ad">🎬 Streaming & TV 4K</div>
                 <div class="clock-box" id="clock">00:00:00 PM</div>
             </div>
         </header>
 
-        <!-- Cuerpo con Canales -->
+        <!-- CONTENIDO CAMBIANTE SEGÚN EL MENÚ LATERAL -->
         <div class="content-body">
             
-            <!-- SECCIÓN 1: CANALES POPULARES Y TU CANAL MIRAMAX TV -->
-            <h2>🔥 Canales Populares y Señales Libres</h2>
-            <div class="channels-grid">
-                <!-- Tu Canal: Miramax TV -->
-                <div class="channel-card" onclick="playChannel('Miramax TV', 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #a855f7;">🎥 MIRAMAX</div>
-                    <div class="channel-name">Miramax TV</div>
-                    <div class="channel-views">Señal Principal</div>
+            <!-- VISTA 1: TELEVISIÓN (Por defecto / Television) -->
+            <div id="view-television" class="view-section active">
+                <h2>🔥 Canales Populares y Tu Canal Miramax TV</h2>
+                <div class="channels-grid">
+                    <div class="channel-card" onclick="playChannel('Miramax TV', 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #a855f7;">🎥 MIRAMAX</div>
+                        <div class="channel-name">Miramax TV</div>
+                        <div class="channel-views">Señal Principal</div>
+                    </div>
+                    <div class="channel-card" onclick="playChannel('NASA TV HD', 'https://nasa-i.akamaihd.net/hls/live/508875/NASA-HDTV-Public/master.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #38bdf8;">NASA</div>
+                        <div class="channel-name">NASA TV HD</div>
+                        <div class="channel-views">Espacio</div>
+                    </div>
+                    <div class="channel-card" onclick="playChannel('France 24 Español', 'https://static.france24.com/live/F24_ES_HI_HLS/live_web.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #60a5fa;">F24</div>
+                        <div class="channel-name">France 24</div>
+                        <div class="channel-views">Noticias</div>
+                    </div>
+                    <div class="channel-card" onclick="playChannel('DW Español', 'https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #facc15;">DW</div>
+                        <div class="channel-name">DW en Español</div>
+                        <div class="channel-views">Internacional</div>
+                    </div>
                 </div>
 
-                <div class="channel-card" onclick="playChannel('NASA TV HD', 'https://nasa-i.akamaihd.net/hls/live/508875/NASA-HDTV-Public/master.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #38bdf8;">NASA</div>
-                    <div class="channel-name">NASA TV HD</div>
-                    <div class="channel-views">Espacio</div>
+                <h2>🇵🇪 Televisión Nacional del Perú</h2>
+                <div class="channels-grid">
+                    <div class="channel-card" onclick="playChannel('TV Perú', 'https://tvperu-live.cdn.atinternet-solutions.com/hls/live/2042296/tvperu/index.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #10b981;">TVP</div>
+                        <div class="channel-name">TV Perú HD</div>
+                        <div class="channel-views">Canal 7 Oficial</div>
+                    </div>
+                    <div class="channel-card" onclick="playChannel('Willax TV', 'https://willax-live.cdn.atinternet-solutions.com/hls/live/2042297/willax/index.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #06b6d4;">WILLAX</div>
+                        <div class="channel-name">Willax TV</div>
+                        <div class="channel-views">Actualidad</div>
+                    </div>
                 </div>
 
-                <div class="channel-card" onclick="playChannel('France 24 Español', 'https://static.france24.com/live/F24_ES_HI_HLS/live_web.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #60a5fa;">F24</div>
-                    <div class="channel-name">France 24</div>
-                    <div class="channel-views">Noticias</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('DW Español', 'https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #facc15;">DW</div>
-                    <div class="channel-name">DW en Español</div>
-                    <div class="channel-views">Internacional</div>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 2: TELEVISIÓN ABIERTA Y NACIONAL DEL PERÚ -->
-            <h2>🇵🇪 Canales de la Televisión Nacional del Perú</h2>
-            <div class="channels-grid">
-                <div class="channel-card" onclick="playChannel('América TV Perú', 'https://tvperu-live.cdn.atinternet-solutions.com/hls/live/2042296/tvperu/index.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #ef4444;">AMÉRICA</div>
-                    <div class="channel-name">América TV</div>
-                    <div class="channel-views">Señal Nacional</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('ATV Perú', 'https://willax-live.cdn.atinternet-solutions.com/hls/live/2042297/willax/index.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #3b82f6;">ATV</div>
-                    <div class="channel-name">ATV En Vivo</div>
-                    <div class="channel-views">Canal 9</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('Panamericana Televisión', 'https://video-edge-4c59d2.telequirk.com/hls/congreso_live.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #eab308;">PANAMERICANA</div>
-                    <div class="channel-name">Panamericana TV</div>
-                    <div class="channel-views">Canal 5</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('Latina TV', 'https://static.france24.com/live/F24_ES_HI_HLS/live_web.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #f97316;">LATINA</div>
-                    <div class="channel-name">Latina TV</div>
-                    <div class="channel-views">Canal 2</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('RPP TV', 'https://video-edge-4c59d2.telequirk.com/hls/telesur_live.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #ef4444;">RPP</div>
-                    <div class="channel-name">RPP Noticias</div>
-                    <div class="channel-views">Radio y TV en Directo</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('TV Perú', 'https://tvperu-live.cdn.atinternet-solutions.com/hls/live/2042296/tvperu/index.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #10b981;">TVP</div>
-                    <div class="channel-name">TV Perú HD</div>
-                    <div class="channel-views">Canal 7 Oficial</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('Willax TV', 'https://willax-live.cdn.atinternet-solutions.com/hls/live/2042297/willax/index.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #06b6d4;">WILLAX</div>
-                    <div class="channel-name">Willax TV</div>
-                    <div class="channel-views">Actualidad y Política</div>
+                <h2>⚽ Canales de Fútbol y Deportes</h2>
+                <div class="channels-grid">
+                    <div class="channel-card" onclick="playChannel('Red Bull Deportes', 'https://rbmn-live.akamaized.net/hls/live/590964/redbull-app-international/master.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #ef4444;">REDBULL</div>
+                        <div class="channel-name">Red Bull Deportes</div>
+                        <div class="channel-views">Acción Extrema</div>
+                    </div>
+                    <div class="channel-card" onclick="playChannel('MLS Eventos Live', 'https://localnow-localnow-1-us.rakuten.wurl.tv/playlist.m3u8')">
+                        <span class="live-tag">EN VIVO</span>
+                        <div class="channel-logo-text" style="color: #10b981;">MLS</div>
+                        <div class="channel-name">MLS Eventos TV</div>
+                        <div class="channel-views">Fútbol Directo</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- SECCIÓN 3: CANALES DE FÚTBOL Y DEPORTES -->
-            <h2>⚽ Canales de Fútbol y Deportes</h2>
-            <div class="channels-grid">
-                <div class="channel-card" onclick="playChannel('Red Bull Deportes', 'https://rbmn-live.akamaized.net/hls/live/590964/redbull-app-international/master.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #ef4444;">REDBULL</div>
-                    <div class="channel-name">Red Bull Deportes</div>
-                    <div class="channel-views">Acción Extrema</div>
+            <!-- VISTA 2: PELÍCULAS, SERIES Y DIBUJOS TIPO NETFLIX -->
+            <div id="view-peliculas" class="view-section">
+                <h2>🍿 Películas de Estreno en 4K</h2>
+                <div class="channels-grid">
+                    <div class="channel-card" onclick="playChannel('Acción Total 4K', 'https://localnow-localnow-1-us.rakuten.wurl.tv/playlist.m3u8')">
+                        <span class="movie-tag">PELÍCULA</span>
+                        <div class="channel-logo-text" style="color: #ef4444;">🎬 ACCIÓN</div>
+                        <div class="channel-name">Acción Extrema 4K</div>
+                        <div class="channel-views">Estreno Netflix</div>
+                    </div>
+                    <div class="channel-card" onclick="playChannel('Cine Terror HD', 'https://fash1014.cloudycdn.services/slive/ftv_hd_720p/playlist.m3u8')">
+                        <span class="movie-tag">PELÍCULA</span>
+                        <div class="channel-logo-text" style="color: #a855f7;">💀 TERROR</div>
+                        <div class="channel-name">Noche de Horror</div>
+                        <div class="channel-views">Película Enlatada</div>
+                    </div>
                 </div>
 
-                <div class="channel-card" onclick="playChannel('CapaDeportes Eventos', 'https://video-edge-4c59d2.telequirk.com/hls/congreso_live.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #38bdf8;">CAPA</div>
-                    <div class="channel-name">CapaDeportes Eventos</div>
-                    <div class="channel-views">Fútbol & Eventos</div>
+                <h2>📺 Series Originales en Español</h2>
+                <div class="channels-grid">
+                    <div class="channel-card" onclick="playChannel('Serie Drama 24/7', 'https://euronews-euronews-spanish-1-us.rakuten.wurl.tv/playlist.m3u8')">
+                        <span class="movie-tag">SERIE</span>
+                        <div class="channel-logo-text" style="color: #38bdf8;">⭐ DRAMA</div>
+                        <div class="channel-name">Maratón de Series</div>
+                        <div class="channel-views">Temporada Completa</div>
+                    </div>
                 </div>
 
-                <div class="channel-card" onclick="playChannel('MLS Eventos Live', 'https://localnow-localnow-1-us.rakuten.wurl.tv/playlist.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #10b981;">MLS</div>
-                    <div class="channel-name">MLS Eventos TV</div>
-                    <div class="channel-views">Fútbol en Directo</div>
-                </div>
-
-                <div class="channel-card" onclick="playChannel('OnlineFútbol Live Stream', 'https://live-s1.unife.tv/hls/unife.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #facc15;">FÚTBOL</div>
-                    <div class="channel-name">OnlineFútbol Eventos</div>
-                    <div class="channel-views">Especial Partidos</div>
+                <h2>🎨 Dibujos Animados e Infantiles</h2>
+                <div class="channels-grid">
+                    <div class="channel-card" onclick="playChannel('Dibujos Animados 24/7', 'https://nasa-i.akamaihd.net/hls/live/508875/NASA-HDTV-Public/master.m3u8')">
+                        <span class="movie-tag">INFANTIL</span>
+                        <div class="channel-logo-text" style="color: #facc15;">🧸 KIDS</div>
+                        <div class="channel-name">Toons & Animación</div>
+                        <div class="channel-views">Clásicos y Estrenos</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Categorías Generales -->
+            <!-- VISTA 3: INICIO / SERVICIOS / FAVORITOS (Secciones genéricas de muestra) -->
+            <div id="view-inicio" class="view-section">
+                <h2>🏠 Bienvenid@ a DeTodoTV4K</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Selecciona una opción en el menú lateral izquierdo para ver Televisión en Vivo, Películas de Estreno, Series o Dibujos Animados estilo Netflix.</p>
+            </div>
+
+            <div id="view-servicios" class="view-section">
+                <h2>🛠️ Servicios de Streaming Disponibles</h2>
+                <p style="color: var(--text-muted);">Plataforma de alta definición optimizada para Smart TV, PC y móviles.</p>
+            </div>
+
+            <div id="view-api" class="view-section">
+                <h2>⚡ API de Conexión IPTV</h2>
+                <p style="color: var(--text-muted);">Sistemas de transmisión HLS y enlaces directos sincronizados.</p>
+            </div>
+
+            <div id="view-favoritos" class="view-section">
+                <h2>❤️ Tus Canales y Películas Favoritas</h2>
+                <p style="color: var(--text-muted);">Aquí aparecerán tus contenidos guardados rápidamente.</p>
+            </div>
+
+            <div id="view-eventos" class="view-section">
+                <h2>📅 Próximos Eventos en Directo</h2>
+                <p style="color: var(--text-muted);">Partidos de fútbol, conciertos y transmisiones especiales.</p>
+            </div>
+
+            <div id="view-dmca" class="view-section">
+                <h2>📜 Políticas de Uso y DMCA</h2>
+                <p style="color: var(--text-muted);">Plataforma informativa de entretenimiento multimedia y streaming abierto.</p>
+            </div>
+
+            <!-- Categorías Generales (Visible en Inicio y TV) -->
             <div class="categories-section">
                 <h2>Categorías generales</h2>
-                
                 <div class="search-container">
                     <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <input type="text" id="searchInput" class="search-input" placeholder="Busca tu canal...">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Busca tu canal, película o serie...">
                 </div>
 
-                <!-- Etiquetas de Categorías -->
                 <div class="tags-grid">
                     <div class="category-tag">⚽ Deportes</div>
                     <div class="category-tag">🇵🇪 Perú</div>
-                    <div class="category-tag">🍿 Entretenimiento</div>
+                    <div class="category-tag">🍿 Películas</div>
+                    <div class="category-tag">📺 Series</div>
+                    <div class="category-tag">🧸 Dibujos Animados</div>
                     <div class="category-tag">🇨🇴 Colombia</div>
-                    <div class="category-tag">🇧🇴 Bolivia</div>
-                    <div class="category-tag">🔞 Canales 18+</div>
-                    <div class="category-tag">🇻🇪 Venezuela</div>
                     <div class="category-tag">🔥 ESPN</div>
-                    <div class="category-tag">✨ Disney Eventos</div>
-                    <div class="category-tag">📺 Canales 24/7</div>
                     <div class="category-tag">🌍 Documentales</div>
                     <div class="category-tag">⭐ Fox Sports</div>
-                    <div class="category-tag">👶 Infantil</div>
                     <div class="category-tag">🎵 Música</div>
-                    <div class="category-tag">🇲🇽 Mexico</div>
-                    <div class="category-tag">🏆 CapaDeportes Eventos</div>
-                    <div class="category-tag">⚡ Vix Eventos</div>
-                    <div class="category-tag">🎬 HBO Canales</div>
-                    <div class="category-tag">⚡ Eurosport</div>
-                    <div class="category-tag">🌐 Mundo</div>
-                    <div class="category-tag">🎯 Fanatiz Eventos</div>
-                    <div class="category-tag">📺 DAZN</div>
-                    <div class="category-tag">🏈 TNT Sport</div>
-                    <div class="category-tag">📡 Direct Sport</div>
-                    <div class="category-tag">⚽ MLS Eventos</div>
-                    <div class="category-tag">🚀 Jeinz Eventos</div>
-                    <div class="category-tag">🇺🇾 Uruguay</div>
-                    <div class="category-tag">🇦🇷 Argentina</div>
-                    <div class="category-tag">⚽ OnlineFutbol Eventos</div>
-                    <div class="category-tag">⭐ Paramount Eventos</div>
-                    <div class="category-tag">🇨🇱 Chile</div>
-                    <div class="category-tag">🇪🇨 Ecuador</div>
-                    <div class="category-tag">⚡ StreamX eventos</div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal Reproductor En Vivo -->
+    <!-- Modal Reproductor En Vivo / Películas -->
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle" style="font-size: 15px;">Reproductor En Vivo</h3>
+                <h3 id="modalTitle" style="font-size: 15px;">Reproductor Multimedia</h3>
                 <button class="close-btn" onclick="closePlayer()">&times;</button>
             </div>
             <div class="video-container">
@@ -555,11 +576,32 @@
             document.getElementById('clock').innerText = now.toLocaleTimeString();
         }, 1000);
 
+        // Función para cambiar de vista desde el menú lateral estilo Netflix
+        function switchView(viewName, element) {
+            // Ocultar todas las vistas
+            const sections = document.querySelectorAll('.view-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // Mostrar la vista seleccionada
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) {
+                targetView.classList.add('active');
+            } else {
+                // Si la vista no existe individual, mostrar inicio por defecto
+                document.getElementById('view-inicio').classList.add('active');
+            }
+
+            // Actualizar estilo activo en el menú lateral
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach(item => item.classList.remove('active'));
+            if(element) element.classList.add('active');
+        }
+
         let hlsInstance = null;
 
-        // Función para reproducir el canal con HLS.js
+        // Función para reproducir contenido (TV, Películas o Series)
         function playChannel(name, streamUrl) {
-            document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
+            document.getElementById('modalTitle').innerText = `Reproduciendo: ${name}`;
             document.getElementById('videoModal').style.display = 'flex';
 
             const video = document.getElementById('videoPlayer');
@@ -617,7 +659,7 @@
             document.getElementById('videoModal').style.display = 'none';
         }
 
-        // Buscador interactivo de canales
+        // Buscador interactivo general
         const searchInput = document.getElementById('searchInput');
         const cards = document.getElementsByClassName('channel-card');
 
