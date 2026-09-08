@@ -87,13 +87,11 @@
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
             transition: all 0.2s;
-            border: 1px solid transparent;
         }
 
         nav a:hover {
             color: var(--accent);
             background: rgba(6, 182, 212, 0.1);
-            border-color: var(--accent);
         }
 
         .search-box {
@@ -432,17 +430,10 @@
             color: var(--accent);
             text-decoration: none;
             font-size: 0.9rem;
-            transition: color 0.2s;
         }
 
         footer a:hover {
             color: var(--accent-light);
-        }
-
-        .error-message {
-            color: var(--danger);
-            padding: 2rem;
-            text-align: center;
         }
 
         @media (max-width: 1024px) {
@@ -578,7 +569,7 @@
 
     <div class="container">
         <div class="hero" id="inicio">
-            <h1>Bienvenido a DeTodoTV4K</h1>
+            <h1>DeTodoTV4K</h1>
             <p>Plataforma de streaming con señales en vivo</p>
             <div class="time-display" id="currentTime">00:00:00</div>
         </div>
@@ -642,13 +633,13 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/c3tech_720p/index.m3u8', 'TVP', 'TV Perú', 'Nacional')">
+            <div class="channel-card" onclick="playChannel('https://la.rtve.es/zgs/zgs.m3u8', 'RTVE', 'RTVE', 'Nacional')">
                 <div class="channel-header">
-                    <span class="channel-name-header">TV Perú</span>
+                    <span class="channel-name-header">RTVE</span>
                     <span class="channel-status">EN VIVO</span>
                 </div>
                 <div class="channel-info">
-                    <div class="channel-name">TV Perú</div>
+                    <div class="channel-name">RTVE</div>
                     <div class="channel-description">Nacional</div>
                     <div class="channel-actions">
                         <button class="btn btn-primary">Reproducir</button>
@@ -660,7 +651,7 @@
 
         <div class="section-title" id="deportes">⚽ Canales Deportivos</div>
         <div class="channels-grid">
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/espnhd_720p/index.m3u8', 'ESPN', 'ESPN', 'Deportes')">
+            <div class="channel-card" onclick="playChannel('https://espn-stream.herokuapp.com/espn.m3u8', 'ESPN', 'ESPN', 'Deportes')">
                 <div class="channel-header">
                     <span class="channel-name-header">ESPN</span>
                     <span class="channel-status">EN VIVO</span>
@@ -675,7 +666,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/foxsports1hd_720p/index.m3u8', 'FOX', 'FOX', 'Deportes')">
+            <div class="channel-card" onclick="playChannel('https://fox-stream.herokuapp.com/fox.m3u8', 'FOX', 'FOX', 'Deportes')">
                 <div class="channel-header">
                     <span class="channel-name-header">FOX Sports</span>
                     <span class="channel-status">EN VIVO</span>
@@ -690,7 +681,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/tnt_720p/index.m3u8', 'TNT', 'TNT', 'Deportes')">
+            <div class="channel-card" onclick="playChannel('https://tnt-stream.herokuapp.com/tnt.m3u8', 'TNT', 'TNT', 'Deportes')">
                 <div class="channel-header">
                     <span class="channel-name-header">TNT Sports</span>
                     <span class="channel-status">EN VIVO</span>
@@ -705,7 +696,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/directv_sports_hd_720p/index.m3u8', 'DIRECTV', 'DIRECTV', 'Deportes')">
+            <div class="channel-card" onclick="playChannel('https://directv-stream.herokuapp.com/directv.m3u8', 'DIRECTV', 'DIRECTV', 'Deportes')">
                 <div class="channel-header">
                     <span class="channel-name-header">DIRECTV</span>
                     <span class="channel-status">EN VIVO</span>
@@ -723,7 +714,7 @@
 
         <div class="section-title" id="documentales">📚 Documentales</div>
         <div class="channels-grid">
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/natgeo_720p/index.m3u8', 'NATGEO', 'Nat Geo', 'Documentales')">
+            <div class="channel-card" onclick="playChannel('https://natgeo-stream.herokuapp.com/natgeo.m3u8', 'NATGEO', 'Nat Geo', 'Documentales')">
                 <div class="channel-header">
                     <span class="channel-name-header">Nat Geo</span>
                     <span class="channel-status">EN VIVO</span>
@@ -738,7 +729,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/discoveryworld_720p/index.m3u8', 'DISCOVERY', 'Discovery', 'Documentales')">
+            <div class="channel-card" onclick="playChannel('https://discovery-stream.herokuapp.com/discovery.m3u8', 'DISCOVERY', 'Discovery', 'Documentales')">
                 <div class="channel-header">
                     <span class="channel-name-header">Discovery</span>
                     <span class="channel-status">EN VIVO</span>
@@ -753,7 +744,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/historychannelsd_720p/index.m3u8', 'HISTORY', 'History', 'Documentales')">
+            <div class="channel-card" onclick="playChannel('https://history-stream.herokuapp.com/history.m3u8', 'HISTORY', 'History', 'Documentales')">
                 <div class="channel-header">
                     <span class="channel-name-header">History</span>
                     <span class="channel-status">EN VIVO</span>
@@ -768,7 +759,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/animalplanetsd_720p/index.m3u8', 'ANIMAL', 'Animal', 'Documentales')">
+            <div class="channel-card" onclick="playChannel('https://animal-stream.herokuapp.com/animal.m3u8', 'ANIMAL', 'Animal', 'Documentales')">
                 <div class="channel-header">
                     <span class="channel-name-header">Animal Planet</span>
                     <span class="channel-status">EN VIVO</span>
@@ -786,7 +777,7 @@
 
         <div class="section-title">🎭 Entretenimiento</div>
         <div class="channels-grid">
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/hbo_720p/index.m3u8', 'HBO', 'HBO', 'Series')">
+            <div class="channel-card" onclick="playChannel('https://hbo-stream.herokuapp.com/hbo.m3u8', 'HBO', 'HBO', 'Series')">
                 <div class="channel-header">
                     <span class="channel-name-header">HBO</span>
                     <span class="channel-status">EN VIVO</span>
@@ -801,7 +792,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/cartoonnetwork_720p/index.m3u8', 'CARTOON', 'Cartoon', 'Infantil')">
+            <div class="channel-card" onclick="playChannel('https://cartoon-stream.herokuapp.com/cartoon.m3u8', 'CARTOON', 'Cartoon', 'Infantil')">
                 <div class="channel-header">
                     <span class="channel-name-header">Cartoon</span>
                     <span class="channel-status">EN VIVO</span>
@@ -816,7 +807,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/disneychannel_720p/index.m3u8', 'DISNEY', 'Disney', 'Infantil')">
+            <div class="channel-card" onclick="playChannel('https://disney-stream.herokuapp.com/disney.m3u8', 'DISNEY', 'Disney', 'Infantil')">
                 <div class="channel-header">
                     <span class="channel-name-header">Disney</span>
                     <span class="channel-status">EN VIVO</span>
@@ -831,7 +822,7 @@
                 </div>
             </div>
 
-            <div class="channel-card" onclick="playChannel('https://ythls.armelin.one/live/mtv_720p/index.m3u8', 'MTV', 'MTV', 'Música')">
+            <div class="channel-card" onclick="playChannel('https://mtv-stream.herokuapp.com/mtv.m3u8', 'MTV', 'MTV', 'Música')">
                 <div class="channel-header">
                     <span class="channel-name-header">MTV</span>
                     <span class="channel-status">EN VIVO</span>
@@ -878,13 +869,6 @@
             const playerTitle = document.getElementById('playerTitle');
             const playerStatus = document.getElementById('playerStatus');
 
-            if (!url || url.includes('undefined')) {
-                player.innerHTML = `<div class="error-message">⚠️ URL no disponible</div>`;
-                playerTitle.textContent = `Error: ${channelName}`;
-                playerStatus.textContent = 'Error';
-                return;
-            }
-
             playerTitle.textContent = `▶ ${channelName}`;
             playerStatus.textContent = 'Cargando...';
 
@@ -894,13 +878,8 @@
             </div>`;
 
             setTimeout(() => {
-                if (url.includes('.m3u8') || url.includes('m3u8')) {
-                    loadHLSStream(url, channelName, player, playerStatus);
-                } else {
-                    player.innerHTML = `<iframe src="${url}" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
-                    playerStatus.textContent = 'En vivo ✓';
-                }
-            }, 300);
+                loadHLSStream(url, channelName, player, playerStatus);
+            }, 500);
         }
 
         function loadHLSStream(url, channelName, player, playerStatus) {
@@ -925,23 +904,19 @@
                 hlsInstance.attachMedia(video);
 
                 hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(e => console.log('Play error:', e));
+                    video.play().catch(e => {});
                     playerStatus.textContent = 'En vivo ✓';
                 });
 
                 hlsInstance.on(window.Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        playerStatus.textContent = 'Error';
-                        console.error('HLS Error:', data);
+                        playerStatus.textContent = 'Error de conexión';
                     }
                 });
             } else if (video.canPlayType('application/x-mpegURL')) {
                 video.src = url;
-                video.play().catch(e => console.log('Play error:', e));
+                video.play().catch(e => {});
                 playerStatus.textContent = 'En vivo ✓';
-            } else {
-                player.innerHTML = `<div class="error-message">Navegador no compatible</div>`;
-                playerStatus.textContent = 'No compatible';
             }
         }
 
@@ -978,7 +953,7 @@
 
             setTimeout(() => {
                 playChannel('https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8', 'MIRAMAX', 'Miramax TV', 'Cine');
-            }, 800);
+            }, 1000);
         });
 
         document.getElementById('searchInput').addEventListener('input', function(e) {
