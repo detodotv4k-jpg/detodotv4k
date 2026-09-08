@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeTodoTV4K - Televisión y Streaming en Vivo</title>
+    <!-- Librería HLS.js oficial para streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
             --bg-color: #0b0514;
@@ -319,10 +321,9 @@
             position: relative;
         }
 
-        iframe {
+        video {
             width: 100%;
             height: 100%;
-            border: none;
             outline: none;
         }
     </style>
@@ -365,7 +366,7 @@
             
             <!-- Grid de Canales Populares -->
             <div class="channels-grid">
-                <!-- Tu Canal: Miramax TV (Reproducción directa mediante reproductor universal embed) -->
+                <!-- Tu Canal: Miramax TV -->
                 <div class="channel-card" onclick="playChannel('Miramax TV', 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8')">
                     <span class="live-tag">EN VIVO</span>
                     <div class="channel-logo-text" style="color: #a855f7;">🎥 MIRAMAX</div>
@@ -454,8 +455,8 @@
                 <h3 id="modalTitle" style="font-size: 15px;">Reproductor En Vivo</h3>
                 <button class="close-btn" onclick="closePlayer()">&times;</button>
             </div>
-            <div class="video-container" id="videoContainer">
-                <!-- Se inyectará el reproductor universal seguro -->
+            <div class="video-container">
+                <video id="videoPlayer" controls autoplay playsinline></video>
             </div>
         </div>
     </div>
@@ -467,20 +468,69 @@
             document.getElementById('clock').innerText = now.toLocaleTimeString();
         }, 1000);
 
-        // Función para abrir la transmisión mediante reproductor embed universal seguro
+        let hlsInstance = null;
+
+        // Función para reproducir utilizando la librería oficial HLS.js con soporte nativo de respaldo
         function playChannel(name, streamUrl) {
             document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
             document.getElementById('videoModal').style.display = 'flex';
 
-            const container = document.getElementById('videoContainer');
-            
-            // Usamos un reproductor HLS web universal incrustado que procesa y renderiza el flujo correctamente
-            container.innerHTML = `<iframe src="https://vidstack.io/player?src=${encodeURIComponent(streamUrl)}" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+            const video = document.getElementById('videoPlayer');
+
+            if (Hls.isSupported()) {
+                if (hlsInstance) {
+                    hlsInstance.destroy();
+                }
+                hlsInstance = new Hls({
+                    debug: false,
+                    xhrSetup: function (xhr, url) {
+                        // Optimización para evitar bloqueos en streams protegidos
+                        xhr.withCredentials = false;
+                    }
+                });
+                hlsInstance.loadSource(streamUrl);
+                hlsInstance.attachMedia(video);
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(error => {
+                        console.log("Reproducción automática bloqueada, requiere interacción del usuario.");
+                    });
+                });
+                
+                hlsInstance.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.log("Error de red intentando recuperar...");
+                                hlsInstance.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.log("Error de medios intentando recuperar...");
+                                hlsInstance.recoverMediaError();
+                                break;
+                            default:
+                                hlsInstance.destroy();
+                                break;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Soporte nativo para dispositivos Apple (Safari/iOS)
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            }
         }
 
-        // Cerrar reproductor
+        // Cerrar reproductor y detener descarga de video
         function closePlayer() {
-            document.getElementById('videoContainer').innerHTML = "";
+            const video = document.getElementById('videoPlayer');
+            video.pause();
+            video.src = "";
+            if (hlsInstance) {
+                hlsInstance.destroy();
+                hlsInstance = null;
+            }
             document.getElementById('videoModal').style.display = 'none';
         }
 
