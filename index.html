@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Miramax TV — En Vivo</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="live-dot"></span><strong>MIRAMAX</strong> TV</div>
+    <nav>
+      <a href="#en-vivo">EN VIVO</a>
+      <a href="#programacion">PROGRAMACIÓN</a>
+      <a href="#noticias">NOTICIAS</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="en-vivo" class="hero">
+      <div class="hero-copy">
+        <span class="badge">🔴 TRANSMISIÓN EN VIVO</span>
+        <h1>Miramax TV</h1>
+        <p>Información, entretenimiento y noticias en vivo.</p>
+      </div>
+
+      <div class="player-card">
+        <video id="player" controls playsinline poster="https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=1400&q=80"></video>
+        <div id="status" class="status">Coloca tu URL HLS (.m3u8) en la configuración.</div>
+      </div>
+
+      <div class="stream-box">
+        <input id="streamUrl" type="url" placeholder="https://tu-servidor.com/canal/stream.m3u8">
+        <button onclick="loadStream()">▶ Ver en vivo</button>
+      </div>
+    </section>
+
+    <section id="programacion" class="section">
+      <div class="section-title">
+        <span>📅</span><h2>Programación</h2>
+      </div>
+      <div class="cards">
+        <article><span>08:00</span><h3>Miramax Noticias</h3><p>Edición mañana</p></article>
+        <article><span>12:00</span><h3>Noticias del Perú</h3><p>Información nacional</p></article>
+        <article><span>17:00</span><h3>Miramax Noticias</h3><p>Edición central</p></article>
+        <article><span>20:00</span><h3>El Perú Canta y Baila</h3><p>Entretenimiento</p></article>
+      </div>
+    </section>
+
+    <section id="noticias" class="section news">
+      <div class="section-title">
+        <span>📰</span><h2>Últimas noticias</h2>
+      </div>
+      <div class="news-grid">
+        <article><div class="thumb">NOTICIAS</div><h3>Información de última hora</h3><p>Actualidad local y nacional.</p></article>
+        <article><div class="thumb">EN VIVO</div><h3>Sigue nuestra señal</h3><p>Disfruta la programación de Miramax TV.</p></article>
+        <article><div class="thumb">PERÚ</div><h3>La información que necesitas</h3><p>Noticias y contenidos durante todo el día.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>MIRAMAX TV</strong><br>
+    Señal en vivo • Noticias • Entretenimiento
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
