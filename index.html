@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeTodoTV4K - Televisión y Streaming en Vivo</title>
+    <!-- Librería HLS.js -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0b0514;
+            --sidebar-color: #120822;
+            --card-bg: #190c2e;
+            --card-hover: #261344;
+            --accent-color: #7c3aed;
+            --text-color: #ffffff;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Barra Lateral (Sidebar) */
+        aside {
+            width: 80px;
+            background-color: var(--sidebar-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            z-index: 10;
+        }
+
+        .sidebar-top {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-icon-top {
+            color: white;
+            cursor: pointer;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .menu-item {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            color: var(--text-color);
+            background-color: rgba(124, 58, 237, 0.2);
+            border-left: 3px solid var(--accent-color);
+        }
+
+        /* Contenido Principal */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* Header Superior */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 40px;
+            background-color: rgba(11, 5, 20, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-color);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #a855f7;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .badge-ad {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .clock-box {
+            background-color: #190c2e;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Cuerpo */
+        .content-body {
+            padding: 30px 40px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Grid de Canales Populares */
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .channel-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.2s, background-color 0.2s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .channel-card:hover {
+            transform: translateY(-3px);
+            background-color: var(--card-hover);
+        }
+
+        .live-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .channel-logo-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #a855f7;
+            margin-top: 10px;
+        }
+
+        .channel-name {
+            font-size: 13px;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+
+        .channel-views {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Sección Categorías Generales */
+        .categories-section {
+            background-color: var(--sidebar-color);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-top: 20px;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: #0b0514;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 20px 12px 45px;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-tag {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #d1d5db;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .category-tag:hover {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Modal Reproductor */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .modal-content {
+            background-color: var(--sidebar-color);
+            width: 100%;
+            max-width: 900px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .video-container {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: black;
+            position: relative;
+        }
+
+        video, iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menú Lateral (Sidebar) -->
+    <aside>
+        <div class="sidebar-top">
+            <div class="sidebar-icon-top">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+            </div>
+        </div>
+        <div class="menu-items">
+            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Inicio</a>
+            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>Servicios</a>
+            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>Api</a>
+            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>Favoritos</a>
+            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Eventos</a>
+            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>Películas</a>
+            <a class="menu-item active"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 12h20M2 7h20M2 17h20"></path></svg>Television</a>
+            <a class="menu-item"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>DMCA</a>
+        </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main>
+        <!-- Header -->
+        <header>
+            <div class="logo">DeTodo<span>TV4K</span></div>
+            <div class="header-right">
+                <div class="badge-ad">🇵🇪 En Vivo Perú</div>
+                <div class="clock-box" id="clock">00:00:00 PM</div>
+            </div>
+        </header>
+
+        <!-- Cuerpo con Canales y Categorías -->
+        <div class="content-body">
+            <h2>🔥 Canales Populares y Señales del Perú</h2>
+            
+            <!-- Grid de Canales Populares -->
+            <div class="channels-grid">
+                <!-- Tu Canal: Miramax TV (Usando reproductor universal seguro) -->
+                <div class="channel-card" onclick="playChannel('Miramax TV', 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #a855f7;">🎥 MIRAMAX</div>
+                    <div class="channel-name">Miramax TV</div>
+                    <div class="channel-views">Señal Principal</div>
+                </div>
+
+                <!-- NASA TV -->
+                <div class="channel-card" onclick="playChannel('NASA TV HD', 'https://nasa-i.akamaihd.net/hls/live/508875/NASA-HDTV-Public/master.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #38bdf8;">NASA</div>
+                    <div class="channel-name">NASA TV HD</div>
+                    <div class="channel-views">Transmisión Espacial</div>
+                </div>
+
+                <!-- France 24 Español -->
+                <div class="channel-card" onclick="playChannel('France 24 Español', 'https://static.france24.com/live/F24_ES_HI_HLS/live_web.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #60a5fa;">F24</div>
+                    <div class="channel-name">France 24</div>
+                    <div class="channel-views">Noticias 24/7</div>
+                </div>
+
+                <!-- DW Español -->
+                <div class="channel-card" onclick="playChannel('DW Español', 'https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #facc15;">DW</div>
+                    <div class="channel-name">DW en Español</div>
+                    <div class="channel-views">Internacional</div>
+                </div>
+            </div>
+
+            <!-- Categorías Generales -->
+            <div class="categories-section">
+                <h2>Categorías generales</h2>
+                
+                <div class="search-container">
+                    <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Busca tu canal...">
+                </div>
+
+                <!-- Etiquetas de Categorías -->
+                <div class="tags-grid">
+                    <div class="category-tag">⚽ Deportes</div>
+                    <div class="category-tag">🇵🇪 Perú</div>
+                    <div class="category-tag">🍿 Entretenimiento</div>
+                    <div class="category-tag">🇨🇴 Colombia</div>
+                    <div class="category-tag">🇧🇴 Bolivia</div>
+                    <div class="category-tag">🔞 Canales 18+</div>
+                    <div class="category-tag">🇻🇪 Venezuela</div>
+                    <div class="category-tag">🔥 ESPN</div>
+                    <div class="category-tag">✨ Disney Eventos</div>
+                    <div class="category-tag">📺 Canales 24/7</div>
+                    <div class="category-tag">🌍 Documentales</div>
+                    <div class="category-tag">⭐ Fox Sports</div>
+                    <div class="category-tag">👶 Infantil</div>
+                    <div class="category-tag">🎵 Música</div>
+                    <div class="category-tag">🇲🇽 Mexico</div>
+                    <div class="category-tag">🏆 CapaDeportes Eventos</div>
+                    <div class="category-tag">⚡ Vix Eventos</div>
+                    <div class="category-tag">🎬 HBO Canales</div>
+                    <div class="category-tag">⚡ Eurosport</div>
+                    <div class="category-tag">🌐 Mundo</div>
+                    <div class="category-tag">🎯 Fanatiz Eventos</div>
+                    <div class="category-tag">📺 DAZN</div>
+                    <div class="category-tag">🏈 TNT Sport</div>
+                    <div class="category-tag">📡 Direct Sport</div>
+                    <div class="category-tag">⚽ MLS Eventos</div>
+                    <div class="category-tag">🚀 Jeinz Eventos</div>
+                    <div class="category-tag">🇺🇾 Uruguay</div>
+                    <div class="category-tag">🇦🇷 Argentina</div>
+                    <div class="category-tag">⚽ OnlineFutbol Eventos</div>
+                    <div class="category-tag">⭐ Paramount Eventos</div>
+                    <div class="category-tag">🇨🇱 Chile</div>
+                    <div class="category-tag">🇪🇨 Ecuador</div>
+                    <div class="category-tag">⚡ StreamX eventos</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Reproductor En Vivo -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" style="font-size: 15px;">Reproductor En Vivo</h3>
+                <button class="close-btn" onclick="closePlayer()">&times;</button>
+            </div>
+            <div class="video-container" id="playerContainer">
+                <!-- Se inyectará el reproductor dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Reloj en tiempo real
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        }, 1000);
+
+        let hlsInstance = null;
+
+        // Función para reproducir utilizando reproductor universal iframe compatible con streams protegidos
+        function playChannel(name, streamUrl) {
+            document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
+            document.getElementById('videoModal').style.display = 'flex';
+
+            const container = document.getElementById('playerContainer');
+            
+            // Usamos un reproductor web de código abierto embebido compatible con enlaces m3u8 directos
+            container.innerHTML = `<iframe src="https://player.twitch.tv/?channel=none&parent=localhost" style="display:none"></iframe>
+                                   <video id="videoPlayer" controls autoplay style="width:100%;height:100%;background:#000;"></video>`;
+
+            const video = document.getElementById('videoPlayer');
+
+            if (Hls.isSupported()) {
+                if (hlsInstance) {
+                    hlsInstance.destroy();
+                }
+                hlsInstance = new Hls();
+                hlsInstance.loadSource(streamUrl);
+                hlsInstance.attachMedia(video);
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(e => console.log("Clic requerido para reproducir"));
+                });
+                hlsInstance.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        // Si el navegador bloquea por CORS estricto de OpenCaster, usamos visor nativo alternativo
+                        container.innerHTML = `<iframe src="https://image.opencaster.com/player?url=${encodeURIComponent(streamUrl)}" style="width:100%;height:100%;border:none;"></iframe>`;
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            }
+        }
+
+        // Cerrar reproductor
+        function closePlayer() {
+            const container = document.getElementById('playerContainer');
+            container.innerHTML = "";
+            if (hlsInstance) {
+                hlsInstance.destroy();
+                hlsInstance = null;
+            }
+            document.getElementById('videoModal').style.display = 'none';
+        }
+
+        // Buscador interactivo de canales
+        const searchInput = document.getElementById('searchInput');
+        const cards = document.getElementsByClassName('channel-card');
+
+        searchInput.addEventListener('keyup', (e) => {
+            const term = e.target.value.toLowerCase();
+            Array.from(cards).forEach(card => {
+                const name = card.querySelector('.channel-name').textContent.toLowerCase();
+                card.style.display = name.includes(term) ? "block" : "none";
+            });
+        });
+    </script>
+</body>
+</html>
