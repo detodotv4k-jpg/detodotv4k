@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeTodoTV4K - Televisión y Streaming en Vivo</title>
-    <!-- Librería HLS.js -->
+    <!-- Librería HLS.js oficial -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
@@ -321,10 +321,9 @@
             position: relative;
         }
 
-        iframe, video {
+        video {
             width: 100%;
             height: 100%;
-            border: none;
             outline: none;
         }
     </style>
@@ -456,8 +455,8 @@
                 <h3 id="modalTitle" style="font-size: 15px;">Reproductor En Vivo</h3>
                 <button class="close-btn" onclick="closePlayer()">&times;</button>
             </div>
-            <div class="video-container" id="videoContainer">
-                <!-- Se inyectará el reproductor seguro mediante iframe -->
+            <div class="video-container">
+                <video id="videoPlayer" controls autoplay></video>
             </div>
         </div>
     </div>
@@ -469,20 +468,42 @@
             document.getElementById('clock').innerText = now.toLocaleTimeString();
         }, 1000);
 
-        // Función para reproducir el canal saltando restricciones CORS mediante visor incrustado seguro
+        let hlsInstance = null;
+
+        // Función para reproducir el canal de forma nativa con HLS.js
         function playChannel(name, streamUrl) {
             document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
             document.getElementById('videoModal').style.display = 'flex';
 
-            const container = document.getElementById('videoContainer');
-            
-            // Usamos un reproductor iframe embebido universal compatible con enlaces m3u8 directos
-            container.innerHTML = `<iframe src="https://image.opencaster.com/player?url=${encodeURIComponent(streamUrl)}" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+            const video = document.getElementById('videoPlayer');
+
+            if (Hls.isSupported()) {
+                if (hlsInstance) {
+                    hlsInstance.destroy();
+                }
+                hlsInstance = new Hls();
+                hlsInstance.loadSource(streamUrl);
+                hlsInstance.attachMedia(video);
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play().catch(e => console.log("Reproducción automática bloqueada por el navegador"));
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = streamUrl;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            }
         }
 
         // Cerrar reproductor
         function closePlayer() {
-            document.getElementById('videoContainer').innerHTML = "";
+            const video = document.getElementById('videoPlayer');
+            video.pause();
+            video.src = "";
+            if (hlsInstance) {
+                hlsInstance.destroy();
+                hlsInstance = null;
+            }
             document.getElementById('videoModal').style.display = 'none';
         }
 
