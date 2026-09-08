@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DeTodoTV4K - Televisión y Streaming en Vivo</title>
-    <!-- Librería HLS.js para reproducción de streams IPTV -->
+    <!-- Librería HLS.js -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
@@ -326,6 +326,17 @@
             height: 100%;
             outline: none;
         }
+        
+        .loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #a855f7;
+            font-size: 14px;
+            font-weight: 600;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -374,20 +385,12 @@
                     <div class="channel-views">Señal Principal</div>
                 </div>
 
-                <!-- TV Perú -->
-                <div class="channel-card" onclick="playChannel('TV Perú', 'https://tvperu-live.cdn.atinternet-solutions.com/hls/live/2042296/tvperu/index.m3u8')">
+                <!-- NASA TV (Señal global 100% estable) -->
+                <div class="channel-card" onclick="playChannel('NASA TV HD', 'https://nasa-i.akamaihd.net/hls/live/508875/NASA-HDTV-Public/master.m3u8')">
                     <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #ef4444;">TVP</div>
-                    <div class="channel-name">TV Perú HD</div>
-                    <div class="channel-views">Canal 7 Oficial</div>
-                </div>
-
-                <!-- Willax TV -->
-                <div class="channel-card" onclick="playChannel('Willax TV', 'https://willax-live.cdn.atinternet-solutions.com/hls/live/2042297/willax/index.m3u8')">
-                    <span class="live-tag">EN VIVO</span>
-                    <div class="channel-logo-text" style="color: #38bdf8;">WILLAX</div>
-                    <div class="channel-name">Willax TV</div>
-                    <div class="channel-views">Señal Abierta</div>
+                    <div class="channel-logo-text" style="color: #38bdf8;">NASA</div>
+                    <div class="channel-name">NASA TV HD</div>
+                    <div class="channel-views">Transmisión Espacial</div>
                 </div>
 
                 <!-- France 24 Español -->
@@ -396,6 +399,14 @@
                     <div class="channel-logo-text" style="color: #60a5fa;">F24</div>
                     <div class="channel-name">France 24</div>
                     <div class="channel-views">Noticias 24/7</div>
+                </div>
+
+                <!-- DW Español -->
+                <div class="channel-card" onclick="playChannel('DW Español', 'https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8')">
+                    <span class="live-tag">EN VIVO</span>
+                    <div class="channel-logo-text" style="color: #facc15;">DW</div>
+                    <div class="channel-name">DW en Español</div>
+                    <div class="channel-views">Internacional</div>
                 </div>
             </div>
 
@@ -456,6 +467,7 @@
                 <button class="close-btn" onclick="closePlayer()">&times;</button>
             </div>
             <div class="video-container">
+                <div id="loadingText" class="loading-text">Conectando señal en directo...</div>
                 <video id="videoPlayer" controls autoplay></video>
             </div>
         </div>
@@ -470,34 +482,45 @@
 
         let hlsInstance = null;
 
-        // Función para reproducir la señal evitando restricciones de red/CORS
+        // Función para reproducir la señal con proxy de seguridad HLS
         function playChannel(name, streamUrl) {
             document.getElementById('modalTitle').innerText = `Transmitiendo: ${name}`;
+            document.getElementById('loadingText').style.display = 'block';
             document.getElementById('videoModal').style.display = 'flex';
 
             const video = document.getElementById('videoPlayer');
-            const proxiedUrl = "https://corsproxy.io/?" + encodeURIComponent(streamUrl);
+            
+            // Usando proxy seguro para evitar bloqueos HTTPS / CORS en navegadores
+            const secureProxyUrl = "https://corsproxy.io/?" + encodeURIComponent(streamUrl);
 
             if (Hls.isSupported()) {
                 if (hlsInstance) {
                     hlsInstance.destroy();
                 }
                 hlsInstance = new Hls();
-                hlsInstance.loadSource(proxiedUrl);
+                hlsInstance.loadSource(secureProxyUrl);
                 hlsInstance.attachMedia(video);
                 
                 hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play().catch(e => console.log("Autoplay requiere interacción del usuario"));
+                    document.getElementById('loadingText').style.display = 'none';
+                    video.play().catch(e => console.log("Interacción de usuario requerida para reproducir"));
+                });
+
+                hlsInstance.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        document.getElementById('loadingText').innerText = "Error al conectar con la señal en vivo.";
+                    }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = streamUrl;
                 video.addEventListener('loadedmetadata', function() {
+                    document.getElementById('loadingText').style.display = 'none';
                     video.play();
                 });
             }
         }
 
-        // Cerrar reproductor y detener video
+        // Cerrar reproductor
         function closePlayer() {
             const video = document.getElementById('videoPlayer');
             video.pause();
