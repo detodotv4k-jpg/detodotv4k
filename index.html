@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PerúStream TV - Global & IPTV</title>
+    <title>PerúStream TV - Global, IPTV & Cámaras en Vivo</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- HLS.js para reproducción de streaming m3u8 -->
@@ -23,7 +23,7 @@
             <h1 class="text-2xl font-bold tracking-wider text-white">Perú<span class="text-orange-500">Stream</span> TV</h1>
         </div>
         <div class="flex items-center gap-3 w-full md:w-auto">
-            <input type="text" id="searchInput" placeholder="Buscar canal..." class="w-full md:w-64 bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+            <input type="text" id="searchInput" placeholder="Buscar canal o cámara..." class="w-full md:w-64 bg-gray-900 border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
             <button onclick="toggleCustomModal()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap">➕ Agregar Canal</button>
         </div>
     </header>
@@ -37,13 +37,13 @@
                 <video id="videoPlayer" class="w-full h-full object-contain" controls autoplay></video>
                 <div id="errorOverlay" class="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center p-6 hidden">
                     <span class="text-orange-500 text-4xl mb-3">⚠️</span>
-                    <p class="text-white font-bold text-lg">Este canal tiene restricciones de reproducción o el enlace expiró.</p>
-                    <p class="text-xs text-gray-400 mt-2 max-w-md">Puedes usar el botón "Agregar Canal" arriba para colocar una URL .m3u8 nueva y funcional.</p>
+                    <p class="text-white font-bold text-lg">Este stream tiene restricciones de reproducción o el servidor está ocupado.</p>
+                    <p class="text-xs text-gray-400 mt-2 max-w-md">Puedes usar el botón "Agregar Canal" arriba para colocar una URL .m3u8 alternativa.</p>
                 </div>
             </div>
             <div class="p-4 bg-gray-900/50 border-t border-gray-800 flex justify-between items-center">
                 <div>
-                    <h2 id="currentTitle" class="text-lg font-bold text-white">Selecciona un canal</h2>
+                    <h2 id="currentTitle" class="text-lg font-bold text-white">Selecciona una señal</h2>
                     <p id="currentCategory" class="text-xs text-gray-400">Plataforma de streaming</p>
                 </div>
                 <span class="bg-orange-500/10 text-orange-500 border border-orange-500/30 text-xs px-3 py-1 rounded-full font-semibold animate-pulse">EN VIVO</span>
@@ -52,11 +52,11 @@
 
         <!-- Modal para Agregar Canal Personalizado -->
         <div id="customModal" class="bg-gray-900 border border-gray-800 rounded-2xl p-6 hidden flex flex-col gap-4">
-            <h3 class="text-lg font-bold text-orange-500">Agregar Canal IPTV Personalizado</h3>
+            <h3 class="text-lg font-bold text-orange-500">Agregar Canal o Cámara IPTV</h3>
             <p class="text-xs text-gray-400">Pega un enlace directo de streaming en formato .m3u8 para sumarlo al instante a tu parrilla.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <input type="text" id="customName" placeholder="Nombre del Canal" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
-                <input type="text" id="customCategoryInput" placeholder="Categoría (Ej. Cine, Noticias)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                <input type="text" id="customName" placeholder="Nombre (Ej. Cámara Tráfico)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                <input type="text" id="customCategoryInput" placeholder="Categoría (Ej. Cámaras en Vivo)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
                 <input type="text" id="customUrl" placeholder="URL del Stream (.m3u8)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
             </div>
             <div class="flex justify-end gap-2">
@@ -70,12 +70,12 @@
             <button onclick="filterCategory('Todos')" class="cat-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap">Todos</button>
             <button onclick="filterCategory('Cine y Entretenimiento')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Cine y Entretenimiento</button>
             <button onclick="filterCategory('Noticias Globales')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Noticias Globales</button>
-            <button onclick="filterCategory('Internacional')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Internacional</button>
+            <button onclick="filterCategory('Cámaras en Vivo')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Cámaras en Vivo</button>
         </div>
 
         <!-- Parrilla de Canales -->
         <div>
-            <h3 class="text-lg font-bold mb-4 text-white">Canales Globales y Miramax TV</h3>
+            <h3 class="text-lg font-bold mb-4 text-white">Señales Globales, MiraMax y Videovigilancia</h3>
             <div id="channelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 <!-- Se inyecta por JavaScript -->
             </div>
@@ -111,16 +111,16 @@
                 logo: "📰"
             },
             {
-                name: "Caracol Internacional",
-                category: "Internacional",
-                url: "https://mdstrm.com/live-stream-playlist/61928014e77341081373e4b7.m3u8",
-                logo: "🌎"
+                name: "Cámara Tráfico Urbana (Test)",
+                category: "Cámaras en Vivo",
+                url: "https://cams.cdn-tv.com/cams/traffic-1/playlist.m3u8",
+                logo: "📹"
             },
             {
-                name: "TeleSUR TV",
-                category: "Noticias Globales",
-                url: "https://venturatt.tv/hls/telesur/index.m3u8",
-                logo: "🛰️"
+                name: "EarthCam Live Feed",
+                category: "Cámaras en Vivo",
+                url: "https://stream-lci.live.cf.kkbox.stream/live/playlist.m3u8",
+                logo: "📷"
             }
         ];
 
@@ -174,7 +174,7 @@
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<p class="text-gray-500 col-span-full text-center py-8">No hay canales en esta sección.</p>`;
+                grid.innerHTML = `<p class="text-gray-500 col-span-full text-center py-8">No hay elementos en esta sección.</p>`;
                 return;
             }
 
@@ -199,15 +199,15 @@
 
         function addCustomChannel() {
             const name = document.getElementById('customName').value.trim();
-            const category = document.getElementById('customCategoryInput').value.trim() || 'Internacional';
+            const category = document.getElementById('customCategoryInput').value.trim() || 'Cámaras en Vivo';
             const url = document.getElementById('customUrl').value.trim();
 
             if (!name || !url) {
-                alert('Por favor, ingresa al menos el nombre y la URL del canal.');
+                alert('Por favor, completa el nombre y la URL.');
                 return;
             }
 
-            const newChannel = { name, category, url, logo: "📺" };
+            const newChannel = { name, category, url, logo: "📹" };
             channels.push(newChannel);
 
             document.getElementById('customName').value = '';
