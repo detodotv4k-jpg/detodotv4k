@@ -3,513 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeTodoTV4K - IPTV Streaming</title>
+    <title>PerúStream TV - IPTV Streaming</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(139, 92, 246, 0.5) rgba(15, 23, 42, 0.5);
         }
-
-        :root {
-            --primary: #7c3aed;
-            --primary-dark: #6d28d9;
-            --accent: #06b6d4;
-            --accent-light: #22d3ee;
-            --bg-base: #0f172a;
-            --bg-elevated: #1e293b;
-            --bg-surface: #334155;
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            --border: #475569;
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        html {
-            scroll-behavior: smooth;
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-base) 0%, #1a1f35 100%);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 4px;
         }
-
-        header {
-            background: rgba(30, 41, 59, 0.98);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 1.25rem 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.7);
         }
-
-        .header-content {
-            max-width: 1600px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        nav {
-            display: flex;
-            gap: 0.5rem;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s;
-        }
-
-        nav a:hover {
-            color: var(--accent);
-            background: rgba(6, 182, 212, 0.1);
-        }
-
-        .search-box {
-            flex-grow: 1;
-            max-width: 320px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--accent);
-            background: var(--bg-elevated);
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
-        }
-
-        .search-box::before {
-            content: '🔍';
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 2.5rem;
-            padding: 3rem 2rem;
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%);
-            border: 2px solid rgba(124, 58, 237, 0.25);
-            border-radius: 1.5rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-weight: 800;
-        }
-
-        .hero p {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        .time-display {
-            font-size: 0.95rem;
-            color: var(--accent);
-            font-weight: 700;
-            background: rgba(6, 182, 212, 0.15);
-            padding: 0.6rem 1.8rem;
-            border-radius: 2rem;
-            display: inline-block;
-            border: 1px solid var(--accent);
-        }
-
-        .player-wrapper {
-            background: var(--bg-elevated);
-            border: 2px solid var(--border);
-            border-radius: 1rem;
-            padding: 2rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 1rem;
         }
-
-        .player-title {
-            font-size: 1.4rem;
-            color: var(--text-primary);
-            font-weight: 700;
+        @media (max-width: 768px) {
+            .channel-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
         }
-
-        .player-status {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+        @media (max-width: 480px) {
+            .channel-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-
-        .video-player {
+        .video-container {
+            position: relative;
             width: 100%;
-            height: clamp(300px, 60vw, 700px);
+            padding-bottom: 56.25%;
             background: #000;
             border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
             overflow: hidden;
-            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.5);
         }
-
-        .video-player video,
-        .video-player iframe {
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
         }
-
-        .loading-spinner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
         }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--border);
-            border-top: 3px solid var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .section-title {
-            font-size: clamp(1.2rem, 3vw, 1.75rem);
-            margin: 2.5rem 0 1.5rem;
-            color: var(--text-primary);
-            font-weight: 700;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(124, 58, 237, 0.3);
-        }
-
-        .channels-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 2.5rem;
-        }
-
         .channel-item {
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
         }
-
         .channel-item:hover {
-            border-color: var(--accent);
-            background: var(--bg-elevated);
-            box-shadow: 0 12px 32px rgba(124, 58, 237, 0.2);
             transform: translateY(-4px);
-        }
-
-        .channel-name {
-            font-weight: 700;
-            color: var(--accent);
-            font-size: 1.05rem;
-        }
-
-        .channel-url {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            word-break: break-all;
-            font-family: monospace;
-            line-height: 1.4;
-        }
-
-        .play-btn {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: #fff;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.2s;
-        }
-
-        .play-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
-        }
-
-        .play-btn:active {
-            transform: translateY(0);
-        }
-
-        footer {
-            background: var(--bg-elevated);
-            border-top: 1px solid var(--border);
-            padding: 2rem;
-            text-align: center;
-            color: var(--text-muted);
-            margin-top: 3rem;
-        }
-
-        footer p {
-            margin: 0.5rem 0;
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            nav {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .hero {
-                padding: 1.5rem 1rem;
-            }
-
-            .channels-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-                gap: 1rem;
-            }
-
-            .video-player {
-                height: 250px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .channels-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .video-player {
-                height: 200px;
-            }
-
-            .player-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
         }
     </style>
 </head>
-<body>
-    <header>
-        <div class="header-content">
-            <div class="logo">▶ DeTodoTV4K IPTV</div>
-            <nav>
-                <a href="#inicio">Inicio</a>
-                <a href="#canales">Canales</a>
-                <a href="#miramax">Miramax</a>
-            </nav>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Buscar canal...">
+<body class="bg-slate-950 text-slate-100">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="text-2xl font-bold bg-gradient-to-r from-purple-500 to-cyan-500 bg-clip-text text-transparent">
+                        ▶ PerúStream TV
+                    </div>
+                </div>
+                <div class="flex-1 max-w-md mx-4">
+                    <input type="text" id="searchInput" placeholder="Buscar canal..." class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20">
+                </div>
+                <button id="settingsBtn" class="p-2 hover:bg-slate-800 rounded-lg transition text-lg">
+                    ⚙️
+                </button>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <div class="container">
-        <div class="hero" id="inicio">
-            <h1>DeTodoTV4K</h1>
-            <p>Plataforma IPTV Gratis - Elige entre cientos de canales</p>
-            <div class="time-display" id="currentTime">00:00:00</div>
-        </div>
-
-        <div class="player-wrapper">
-            <div class="player-header">
-                <div>
-                    <div class="player-title" id="playerTitle">▶ Selecciona un canal</div>
-                    <div class="player-status" id="playerStatus">Esperando selección...</div>
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Player Section -->
+        <div class="mb-8">
+            <div class="bg-slate-900 rounded-lg border border-slate-800 overflow-hidden">
+                <div class="aspect-video bg-black rounded-lg mb-4 relative">
+                    <div id="playerContainer" class="w-full h-full flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-16 h-16 border-4 border-slate-700 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
+                            <p class="text-slate-400">Selecciona un canal para reproducir</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-slate-800">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 id="channelTitle" class="text-xl font-bold text-slate-100">Esperando selección...</h2>
+                        <span id="liveStatus" class="px-3 py-1 bg-red-900/30 text-red-400 rounded text-sm font-semibold">EN VIVO</span>
+                    </div>
+                    <p id="channelDesc" class="text-slate-400 text-sm">Selecciona un canal de la lista para comenzar a reproducir</p>
                 </div>
             </div>
-            <div class="video-player" id="videoPlayer">
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
-                </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="mb-8">
+            <div class="flex gap-2 overflow-x-auto pb-2">
+                <button class="category-btn px-4 py-2 bg-purple-600 text-white rounded-lg font-medium whitespace-nowrap transition hover:bg-purple-700" data-category="todos">
+                    Todos
+                </button>
+                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="peru">
+                    Señal Abierta Perú
+                </button>
+                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="noticias">
+                    Noticias
+                </button>
+                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="entretenimiento">
+                    Entretenimiento
+                </button>
+                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="deportes">
+                    Deportes
+                </button>
+                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="internacional">
+                    Internacional
+                </button>
             </div>
         </div>
 
-        <div class="section-title" id="canales">📺 Canales IPTV Gratis</div>
-        <div class="channels-grid" id="channelsContainer"></div>
+        <!-- Channels Grid -->
+        <div id="channelsContainer" class="channel-grid">
+            <!-- Canales se cargarán aquí -->
+        </div>
     </div>
 
-    <footer>
-        <p><strong>DeTodoTV4K</strong> © 2024</p>
-        <p>Plataforma IPTV de transmisión en vivo</p>
-        <p style="margin-top: 1rem; font-size: 0.8rem;">Todos los canales son enlaces IPTV públicos gratuitos</p>
-    </footer>
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 rounded-lg border border-slate-800 w-full max-w-md">
+            <div class="p-6 border-b border-slate-800">
+                <h3 class="text-xl font-bold text-slate-100">Cargar lista IPTV personalizada</h3>
+                <p class="text-slate-400 text-sm mt-1">Pega tu lista M3U o enlaces IPTV</p>
+            </div>
+            <div class="p-6">
+                <textarea id="iptvInput" placeholder="Ejemplo:&#10;#EXTINF:-1, Canal Nombre&#10;http://link.m3u8&#10;&#10;o solo pega uno por línea" class="w-full h-32 bg-slate-800 border border-slate-700 rounded-lg p-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono text-sm resize-none"></textarea>
+            </div>
+            <div class="p-6 border-t border-slate-800 flex gap-3">
+                <button id="loadIptvBtn" class="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                    Cargar
+                </button>
+                <button id="closeSettingsBtn" class="flex-1 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium transition">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        const iptvChannels = [
-            { name: 'Miramax TV', url: 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8' },
-            { name: 'RTVE La 1', url: 'https://la.rtve.es/zgs/zgs.m3u8' },
-            { name: 'France 24', url: 'https://static.france24.com/live/F24_ES_LO.m3u8' },
-            { name: 'DW en Español', url: 'https://dw-1.akamaized.net/master.m3u8' },
-            { name: 'BBC News', url: 'https://bbcmedia.akamaized.net/bbc_mundo/live/hls/master.m3u8' },
-            { name: 'CNN En Español', url: 'https://cnnlive-hd-1.akamaized.net/hls/live/622512/cnnlivelatam/master.m3u8' },
-            { name: 'Euronews', url: 'https://euronews-live.akamaized.net/es.m3u8' },
-            { name: 'Aljazeera', url: 'https://live-hls-web-aje.getaj.net/AJE/index.m3u8' },
-            { name: 'TV5 Monde', url: 'https://tv5mondeplus-i.akamaized.net/hls/live/631786/tv5mondeplus/index.m3u8' },
-            { name: 'NHK World', url: 'https://nhkwlive-xjp.akamaized.net/hls/live/2003458/nhkwlive-xjp/index.m3u8' },
-            { name: 'Bloomberg', url: 'https://liveprodeus.global.ssl.fastly.net/btv/desktop/hls/emea/live_tv.m3u8' },
-            { name: 'Arte', url: 'https://artesimulcast.akamaized.net/hls/live/2043637/artelive/master.m3u8' },
-            { name: 'Telesur', url: 'https://telesurstream.akamaized.net/live/telesur/stgo.m3u8' },
-            { name: 'Eurosport', url: 'https://eurosport-hls.akamaized.net/index.m3u8' },
-            { name: 'TVP Internacional', url: 'https://tvpstream.tvp.pl/video/livestream,/ngnstream.stream/playlist.m3u8' },
-            { name: 'TVE 24H', url: 'https://rtveplay.rtve.es/24h/playlist.m3u8' },
-            { name: 'Canal 3XL', url: 'https://ccma-tv-int.rtve.es/z3xl.m3u8' },
-            { name: 'Das Erste', url: 'https://daserste.akamaized.net/daserste/de/master.m3u8' },
-            { name: 'ZDF', url: 'https://zdf-hls.akamaized.net/hls/live/2016498/de/master.m3u8' },
-            { name: 'TF1', url: 'https://tf1-hls.akamaized.net/tf1.m3u8' },
-            { name: 'France 3', url: 'https://france3-hls.akamaized.net/france3.m3u8' },
-            { name: 'Rai 1', url: 'https://rai1-hls.akamaized.net/rai1.m3u8' },
-            { name: 'TVE', url: 'https://rtveplay.rtve.es/tve/master.m3u8' },
-            { name: 'ABC España', url: 'https://abc-stream.rtve.es/abc.m3u8' },
-            { name: 'Sky News', url: 'https://skynews-hls.akamaized.net/skynews/master.m3u8' },
-            { name: 'CNBC', url: 'https://cnbc-hls.akamaized.net/cnbc/master.m3u8' },
-            { name: 'Fox News', url: 'https://foxnews-hls.akamaized.net/foxnews/master.m3u8' },
-            { name: 'MSNBC', url: 'https://msnbc-hls.akamaized.net/msnbc/master.m3u8' },
-            { name: 'Disney Channel', url: 'https://disneychannel-hls.akamaized.net/disneychannel/master.m3u8' },
-            { name: 'HBO', url: 'https://hbo-hls.akamaized.net/hbo/master.m3u8' }
+        const channels = [
+            // Señal Abierta Perú
+            { name: 'TV Perú', url: 'https://cdnhd.xyz/tvperu', category: 'peru', description: 'Canal estatal peruano' },
+            { name: 'Latina', url: 'https://cdnhd.xyz/latina', category: 'peru', description: 'Televisión Latina' },
+            { name: 'América TV', url: 'https://cdnhd.xyz/americatv', category: 'peru', description: 'Canal América TV' },
+            { name: 'Panamericana', url: 'https://cdnhd.xyz/panamericana', category: 'peru', description: 'Panamericana Televisión' },
+            { name: 'ATV', url: 'https://cdnhd.xyz/atv', category: 'peru', description: 'ATV Perú' },
+            { name: 'RPP TV', url: 'https://cdnhd.xyz/rpptv', category: 'peru', description: 'RPP Televisión' },
+            
+            // Noticias
+            { name: 'France 24', url: 'https://static.france24.com/live/F24_ES_LO.m3u8', category: 'noticias', description: 'Noticias internacionales' },
+            { name: 'DW en Español', url: 'https://dw-1.akamaized.net/master.m3u8', category: 'noticias', description: 'Deutsche Welle' },
+            { name: 'BBC News', url: 'https://bbcmedia.akamaized.net/bbc_mundo/live/hls/master.m3u8', category: 'noticias', description: 'BBC Mundo' },
+            { name: 'CNN En Español', url: 'https://cnnlive-hd-1.akamaized.net/hls/live/622512/cnnlivelatam/master.m3u8', category: 'noticias', description: 'Noticias CNN' },
+            
+            // Entretenimiento
+            { name: 'Miramax', url: 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8', category: 'entretenimiento', description: 'Cine y entretenimiento' },
+            { name: 'HBO', url: 'https://hbo-hls.akamaized.net/hbo/master.m3u8', category: 'entretenimiento', description: 'HBO Latinoamérica' },
+            { name: 'Disney Channel', url: 'https://disneychannel-hls.akamaized.net/disneychannel/master.m3u8', category: 'entretenimiento', description: 'Disney Channel' },
+            { name: 'Cartoon Network', url: 'https://cartoon-hls.akamaized.net/cartoon/master.m3u8', category: 'entretenimiento', description: 'Dibujos animados' },
+            
+            // Deportes
+            { name: 'ESPN', url: 'https://stream.sportstv.online/espn/index.m3u8', category: 'deportes', description: 'Deportes ESPN' },
+            { name: 'FOX Sports', url: 'https://stream.sportstv.online/foxsports/index.m3u8', category: 'deportes', description: 'Fútbol y deportes' },
+            { name: 'TNT Sports', url: 'https://stream.sportstv.online/tnt/index.m3u8', category: 'deportes', description: 'Transmisiones deportivas' },
+            { name: 'Eurosport', url: 'https://eurosport-hls.akamaized.net/index.m3u8', category: 'deportes', description: 'Eventos europeos' },
+            
+            // Internacional
+            { name: 'Euronews', url: 'https://euronews-live.akamaized.net/es.m3u8', category: 'internacional', description: 'Noticias europeas' },
+            { name: 'Aljazeera', url: 'https://live-hls-web-aje.getaj.net/AJE/index.m3u8', category: 'internacional', description: 'Al Jazeera' },
+            { name: 'TV5 Monde', url: 'https://tv5mondeplus-i.akamaized.net/hls/live/631786/tv5mondeplus/index.m3u8', category: 'internacional', description: 'Televisión francesa' },
+            { name: 'NHK World', url: 'https://nhkwlive-xjp.akamaized.net/hls/live/2003458/nhkwlive-xjp/index.m3u8', category: 'internacional', description: 'NHK Japón' }
         ];
 
-        function updateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
-        }
+        let customChannels = [];
+        let currentCategory = 'todos';
+        let hlsInstance = null;
 
         function renderChannels() {
             const container = document.getElementById('channelsContainer');
-            container.innerHTML = iptvChannels.map((channel, index) => `
-                <div class="channel-item">
-                    <div class="channel-name">${channel.name}</div>
-                    <div class="channel-url">${channel.url.substring(0, 50)}...</div>
-                    <button class="play-btn" onclick="playChannel('${channel.url}', '${channel.name}')">Reproducir</button>
+            const allChannels = [...channels, ...customChannels];
+            const filtered = currentCategory === 'todos' 
+                ? allChannels 
+                : allChannels.filter(ch => ch.category === currentCategory);
+
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searched = filtered.filter(ch => 
+                ch.name.toLowerCase().includes(searchTerm) || 
+                ch.description.toLowerCase().includes(searchTerm)
+            );
+
+            container.innerHTML = searched.map((channel, index) => `
+                <div class="channel-item bg-slate-900 rounded-lg border border-slate-800 overflow-hidden hover:border-purple-500 cursor-pointer" onclick="playChannel('${channel.url.replace(/'/g, "\\'")}', '${channel.name.replace(/'/g, "\\'")}', '${channel.description.replace(/'/g, "\\'")}')">
+                    <div class="aspect-square bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center">
+                        <span class="text-4xl">📺</span>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-bold text-slate-100 truncate">${channel.name}</h3>
+                        <p class="text-xs text-slate-400 truncate">${channel.description}</p>
+                        <div class="mt-2 text-xs font-semibold text-red-400">● EN VIVO</div>
+                    </div>
                 </div>
             `).join('');
+
+            if (searched.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-400">No se encontraron canales</p></div>';
+            }
         }
 
-        function playChannel(url, name) {
-            const player = document.getElementById('videoPlayer');
-            const playerTitle = document.getElementById('playerTitle');
-            const playerStatus = document.getElementById('playerStatus');
+        function playChannel(url, name, description) {
+            const container = document.getElementById('playerContainer');
+            document.getElementById('channelTitle').textContent = name;
+            document.getElementById('channelDesc').textContent = description;
 
-            playerTitle.textContent = `▶ ${name}`;
-            playerStatus.textContent = 'Cargando...';
-
-            player.innerHTML = `<div class="loading-spinner">
-                <div class="spinner"></div>
-                <p style="color: var(--text-muted);">Cargando ${name}...</p>
-            </div>`;
+            container.innerHTML = `<div class="w-full h-full flex items-center justify-center"><div class="text-center"><div class="w-16 h-16 border-4 border-slate-700 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div><p class="text-slate-400">Cargando ${name}...</p></div></div>`;
 
             setTimeout(() => {
-                if (window.Hls && window.Hls.isSupported()) {
-                    player.innerHTML = `<video id="hlsPlayer" controls autoplay style="width:100%; height:100%;"></video>`;
-                    const video = document.getElementById('hlsPlayer');
-                    const hls = new window.Hls({ debug: false, enableWorker: true, lowLatencyMode: true });
-                    hls.loadSource(url);
-                    hls.attachMedia(video);
-                    hls.on(window.Hls.Events.MANIFEST_PARSED, () => {
-                        video.play().catch(e => {});
-                        playerStatus.textContent = 'En vivo ✓';
-                    });
-                    hls.on(window.Hls.Events.ERROR, () => {
-                        playerStatus.textContent = 'Error de conexión';
+                if (!window.Hls) {
+                    container.innerHTML = `<video controls autoplay style="width:100%;height:100%;"><source src="${url}" type="application/x-mpegURL"></video>`;
+                    return;
+                }
+
+                container.innerHTML = `<video id="hls-video" controls autoplay style="width:100%;height:100%;"></video>`;
+                const video = document.getElementById('hls-video');
+
+                if (window.Hls.isSupported()) {
+                    if (hlsInstance) hlsInstance.destroy();
+                    hlsInstance = new window.Hls({ debug: false, enableWorker: true, lowLatencyMode: true });
+                    hlsInstance.loadSource(url);
+                    hlsInstance.attachMedia(video);
+                    hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+                    hlsInstance.on(window.Hls.Events.ERROR, (event, data) => {
+                        if (data.fatal) container.innerHTML = `<div class="flex items-center justify-center w-full h-full text-red-400"><p>Error al cargar el stream</p></div>`;
                     });
                 } else {
-                    player.innerHTML = `<video controls autoplay style="width:100%; height:100%;"><source src="${url}" type="application/x-mpegURL"></video>`;
-                    playerStatus.textContent = 'En vivo ✓';
+                    video.src = url;
+                    video.play().catch(() => {});
                 }
             }, 300);
         }
 
-        updateTime();
-        setInterval(updateTime, 1000);
-        renderChannels();
-
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const search = e.target.value.toLowerCase();
-            document.querySelectorAll('.channel-item').forEach(item => {
-                const name = item.querySelector('.channel-name').textContent.toLowerCase();
-                item.style.display = name.includes(search) || search === '' ? '' : 'none';
+        // Event Listeners
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('bg-purple-600', 'text-white'));
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.add('bg-slate-800', 'text-slate-300'));
+                btn.classList.remove('bg-slate-800', 'text-slate-300');
+                btn.classList.add('bg-purple-600', 'text-white');
+                currentCategory = btn.dataset.category;
+                renderChannels();
             });
         });
 
+        document.getElementById('searchInput').addEventListener('input', renderChannels);
+
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            document.getElementById('settingsModal').classList.toggle('hidden');
+        });
+
+        document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+            document.getElementById('settingsModal').classList.add('hidden');
+        });
+
+        document.getElementById('loadIptvBtn').addEventListener('click', () => {
+            const input = document.getElementById('iptvInput').value.trim();
+            if (!input) return;
+
+            customChannels = [];
+            const lines = input.split('\n');
+            let currentName = '';
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('#EXTINF:')) {
+                    currentName = line.split(',').pop().trim();
+                } else if (line && !line.startsWith('#') && line.includes('http')) {
+                    if (currentName) {
+                        customChannels.push({ name: currentName, url: line, category: 'personalizado', description: 'Canal personalizado' });
+                    } else {
+                        customChannels.push({ name: `Canal ${customChannels.length + 1}`, url: line, category: 'personalizado', description: 'Canal personalizado' });
+                    }
+                    currentName = '';
+                }
+            });
+
+            document.getElementById('iptvInput').value = '';
+            document.getElementById('settingsModal').classList.add('hidden');
+            renderChannels();
+        });
+
+        // Cargar primer canal al iniciar
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                playChannel('https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8', 'Miramax TV');
-            }, 1000);
+            renderChannels();
+            setTimeout(() => playChannel(channels[0].url, channels[0].name, channels[0].description), 500);
         });
     </script>
 </body>
