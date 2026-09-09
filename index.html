@@ -38,7 +38,7 @@
                 <div id="errorOverlay" class="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-center p-6 hidden">
                     <span class="text-orange-500 text-4xl mb-3">⚠️</span>
                     <p class="text-white font-bold text-lg">Este canal tiene restricciones de reproducción o el enlace expiró.</p>
-                    <p class="text-xs text-gray-400 mt-2 max-w-md">Puedes usar el botón "Agregar Canal" arriba para colocar una URL .m3u8 funcional y actualizada.</p>
+                    <p class="text-xs text-gray-400 mt-2 max-w-md">Puedes usar el botón "Agregar Canal" arriba para colocar una URL .m3u8 nueva y funcional.</p>
                 </div>
             </div>
             <div class="p-4 bg-gray-900/50 border-t border-gray-800 flex justify-between items-center">
@@ -53,10 +53,10 @@
         <!-- Modal para Agregar Canal Personalizado -->
         <div id="customModal" class="bg-gray-900 border border-gray-800 rounded-2xl p-6 hidden flex flex-col gap-4">
             <h3 class="text-lg font-bold text-orange-500">Agregar Canal IPTV Personalizado</h3>
-            <p class="text-xs text-gray-400">Pega un enlace directo de streaming en formato .m3u8 para sumarlo a tu parrilla.</p>
+            <p class="text-xs text-gray-400">Pega un enlace directo de streaming en formato .m3u8 para sumarlo al instante a tu parrilla.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <input type="text" id="customName" placeholder="Nombre del Canal (Ej. Willax / ATV)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
-                <input type="text" id="customCategoryInput" placeholder="Categoría (Ej. Nacional, Noticias)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                <input type="text" id="customName" placeholder="Nombre del Canal (Ej. Canal Local)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                <input type="text" id="customCategoryInput" placeholder="Categoría (Ej. Cine, Noticias)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
                 <input type="text" id="customUrl" placeholder="URL del Stream (.m3u8)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
             </div>
             <div class="flex justify-end gap-2">
@@ -68,7 +68,7 @@
         <!-- Categorías -->
         <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none" id="categoryContainer">
             <button onclick="filterCategory('Todos')" class="cat-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap">Todos</button>
-            <button onclick="filterCategory('Nacional')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Nacional</button>
+            <button onclick="filterCategory('Cine y Series')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Cine y Series</button>
             <button onclick="filterCategory('Noticias')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Noticias</button>
             <button onclick="filterCategory('Internacional')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Internacional</button>
         </div>
@@ -87,10 +87,10 @@
     <script>
         let channels = [
             {
-                name: "TV Perú",
-                category: "Nacional",
-                url: "https://tvperu-live.bvi.tv/hls/live/202020/tvperu/index.m3u8",
-                logo: "📺"
+                name: "MiraMax (Cine)",
+                category: "Cine y Series",
+                url: "https://amc-absolutereality-1-us.plex.wurl.tv/playlist.m3u8",
+                logo: "🎬"
             },
             {
                 name: "DW en Español",
@@ -199,7 +199,7 @@
 
         function addCustomChannel() {
             const name = document.getElementById('customName').value.trim();
-            const category = document.getElementById('customCategoryInput').value.trim() || 'Nacional';
+            const category = document.getElementById('customCategoryInput').value.trim() || 'Cine y Series';
             const url = document.getElementById('customUrl').value.trim();
 
             if (!name || !url) {
