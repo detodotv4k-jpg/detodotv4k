@@ -641,4 +641,25 @@
                 line = line.trim();
                 if (line.startsWith('#EXTINF:')) {
                     currentName = line.split(',').pop().trim();
-                } else if (line && !line.startsWith('#')
+                } else if (line && !line.startsWith('#') && line.includes('http')) {
+                    if (currentName) {
+                        customChannels.push({ name: currentName, url: line, category: 'personalizado', icon: '📺', desc: 'Canal personalizado' });
+                    } else {
+                        customChannels.push({ name: `Canal ${customChannels.length + 1}`, url: line, category: 'personalizado', icon: '📺', desc: 'Canal personalizado' });
+                    }
+                    currentName = '';
+                }
+            });
+
+            iptvInput.value = '';
+            settingsModal.classList.remove('open');
+            renderChannels();
+        });
+
+        window.addEventListener('load', () => {
+            renderChannels();
+            setTimeout(() => playChannel(channels[0].url, channels[0].name, channels[0].desc), 500);
+        });
+    </script>
+</body>
+</html>
