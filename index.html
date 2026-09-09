@@ -8,117 +8,101 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
-            --color-bg-base: #0a0f1d;
-            --color-bg-elevated: #0f1420;
-            --color-bg-surface: #151d2e;
-            --color-border: #1f2937;
-            --color-text-primary: #ffffff;
-            --color-text-secondary: #d1d5db;
-            --color-text-muted: #9ca3af;
-            --color-accent-orange: #ff7a00;
-            --color-accent-orange-dark: #e66f00;
-            --color-accent-orange-light: #ffa500;
+            --orange: #ff7a00;
+            --orange-light: #ffa500;
+            --orange-dark: #e66f00;
+            --bg-base: #0a0f1d;
+            --bg-elevated: #0f1420;
+            --bg-surface: #151d2e;
+            --border: #1f2937;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --text-muted: #9ca3af;
         }
 
         * {
             scrollbar-width: thin;
-            scrollbar-color: var(--color-accent-orange) var(--color-bg-base);
+            scrollbar-color: var(--orange) var(--bg-base);
         }
 
         ::-webkit-scrollbar {
             width: 8px;
-            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--color-bg-base);
+            background: var(--bg-base);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--color-accent-orange);
+            background: var(--orange);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--color-accent-orange-light);
+            background: var(--orange-light);
         }
 
         body {
-            background: linear-gradient(135deg, var(--color-bg-base) 0%, #0d1218 100%);
-            color: var(--color-text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-base) 0%, #0d1218 100%);
+            color: var(--text-primary);
         }
 
         .navbar {
             background: rgba(10, 15, 29, 0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--color-border);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--color-accent-orange) 0%, #ff9500 100%);
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
         }
 
         .search-input {
-            background: var(--color-bg-surface);
-            border: 1px solid var(--color-border);
-            color: var(--color-text-primary);
-            padding: 0.6rem 1rem;
-            border-radius: 0.5rem;
-            width: 100%;
-            max-width: 300px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
             transition: all 0.3s;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: var(--color-accent-orange);
-            background: var(--color-bg-elevated);
+            border-color: var(--orange);
+            background: var(--bg-elevated);
             box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
         }
 
         .search-input::placeholder {
-            color: var(--color-text-muted);
+            color: var(--text-muted);
         }
 
         .category-btn {
-            padding: 0.6rem 1.25rem;
-            background: var(--color-bg-surface);
-            color: var(--color-text-secondary);
-            border: 1px solid var(--color-border);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
             transition: all 0.3s;
             white-space: nowrap;
         }
 
         .category-btn:hover {
-            background: var(--color-bg-elevated);
-            border-color: var(--color-accent-orange);
-            color: var(--color-text-primary);
+            background: var(--bg-elevated);
+            border-color: var(--orange);
+            color: var(--text-primary);
         }
 
         .category-btn.active {
-            background: var(--color-accent-orange);
+            background: var(--orange);
             color: #000;
-            border-color: var(--color-accent-orange);
+            border-color: var(--orange);
         }
 
         .player-wrapper {
-            background: var(--color-bg-elevated);
-            border: 1px solid var(--color-border);
-            border-radius: 0.75rem;
-            overflow: hidden;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
@@ -126,540 +110,4 @@
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
-            background: #000;
-            overflow: hidden;
-        }
-
-        .video-container video,
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .loading-state {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: var(--color-text-muted);
-        }
-
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid var(--color-border);
-            border-top: 3px solid var(--color-accent-orange);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .channel-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1rem;
-        }
-
-        .channel-card {
-            background: var(--color-bg-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .channel-card:hover {
-            border-color: var(--color-accent-orange);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(255, 122, 0, 0.15);
-        }
-
-        .channel-card.playing {
-            border-color: var(--color-accent-orange);
-            box-shadow: 0 0 16px rgba(255, 122, 0, 0.3), inset 0 0 0 2px var(--color-accent-orange);
-        }
-
-        .channel-thumbnail {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: linear-gradient(135deg, rgba(255, 122, 0, 0.1) 0%, rgba(255, 122, 0, 0.05) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: var(--color-accent-orange);
-        }
-
-        .channel-info {
-            padding: 1rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .channel-name {
-            font-weight: 700;
-            color: var(--color-text-primary);
-            font-size: 0.95rem;
-            line-height: 1.2;
-        }
-
-        .channel-category {
-            font-size: 0.75rem;
-            color: var(--color-text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .play-indicator {
-            font-size: 0.8rem;
-            color: var(--color-accent-orange);
-            font-weight: 600;
-            margin-top: auto;
-        }
-
-        .settings-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 50;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .settings-modal.open {
-            display: flex;
-        }
-
-        .settings-content {
-            background: var(--color-bg-elevated);
-            border: 1px solid var(--color-border);
-            border-radius: 0.75rem;
-            width: 100%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .settings-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .settings-header h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--color-text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .settings-header p {
-            color: var(--color-text-muted);
-            font-size: 0.9rem;
-        }
-
-        .settings-body {
-            padding: 1.5rem;
-        }
-
-        .settings-textarea {
-            width: 100%;
-            height: 200px;
-            background: var(--color-bg-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 0.5rem;
-            color: var(--color-text-primary);
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.875rem;
-            resize: vertical;
-            transition: all 0.3s;
-        }
-
-        .settings-textarea:focus {
-            outline: none;
-            border-color: var(--color-accent-orange);
-            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
-        }
-
-        .settings-textarea::placeholder {
-            color: var(--color-text-muted);
-        }
-
-        .settings-footer {
-            padding: 1.5rem;
-            border-top: 1px solid var(--color-border);
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary {
-            background: var(--color-accent-orange);
-            color: #000;
-            flex: 1;
-        }
-
-        .btn-primary:hover {
-            background: var(--color-accent-orange-light);
-            box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--color-bg-surface);
-            color: var(--color-text-secondary);
-            border: 1px solid var(--color-border);
-            flex: 1;
-        }
-
-        .btn-secondary:hover {
-            background: var(--color-border);
-            color: var(--color-text-primary);
-        }
-
-        .btn-floating {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            background: var(--color-accent-orange);
-            color: #000;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 24px rgba(255, 122, 0, 0.3);
-            transition: all 0.3s;
-            z-index: 40;
-        }
-
-        .btn-floating:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 32px rgba(255, 122, 0, 0.4);
-        }
-
-        .error-state {
-            text-align: center;
-            padding: 2rem;
-            color: var(--color-text-muted);
-        }
-
-        .error-state .error-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .channel-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 0.75rem;
-            }
-
-            .search-input {
-                max-width: 100%;
-            }
-
-            .category-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.85rem;
-            }
-
-            .btn-floating {
-                bottom: 1.5rem;
-                right: 1.5rem;
-                width: 48px;
-                height: 48px;
-                font-size: 1.25rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .channel-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-            }
-
-            .navbar {
-                padding: 0.75rem 0.5rem;
-            }
-
-            .logo {
-                font-size: 1.1rem;
-            }
-
-            .settings-content {
-                border-radius: 1rem 1rem 0 0;
-                max-height: 90vh;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Navbar -->
-    <nav class="navbar sticky top-0 z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between gap-4 py-4 flex-wrap">
-                <div class="logo">▶ PerúStream TV</div>
-                <input type="text" id="searchInput" class="search-input" placeholder="Buscar canal...">
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        <!-- Player Section -->
-        <div class="player-wrapper">
-            <div class="video-container">
-                <div id="playerContent" class="loading-state">
-                    <div class="spinner"></div>
-                </div>
-            </div>
-            <div style="background: var(--color-bg-surface); padding: 1.25rem; border-top: 1px solid var(--color-border);">
-                <div class="flex justify-between items-start gap-3 mb-3">
-                    <div>
-                        <div id="channelTitle" style="font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 0.25rem;">Selecciona un canal</div>
-                        <div id="channelDesc" style="color: var(--color-text-muted); font-size: 0.9rem;">Elige un canal de la lista para comenzar</div>
-                    </div>
-                    <span style="background: rgba(255, 122, 0, 0.15); color: var(--color-accent-orange); padding: 0.4rem 0.8rem; border-radius: 0.35rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">EN VIVO</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Categories -->
-        <div style="overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem;">
-            <div style="display: flex; gap: 0.75rem; min-width: min-content;">
-                <button class="category-btn active" data-category="todos">Todos</button>
-                <button class="category-btn" data-category="peru">Señal Abierta Perú</button>
-                <button class="category-btn" data-category="noticias">Noticias</button>
-                <button class="category-btn" data-category="deportes">Deportes</button>
-                <button class="category-btn" data-category="entretenimiento">Entretenimiento</button>
-                <button class="category-btn" data-category="internacional">Internacional</button>
-            </div>
-        </div>
-
-        <!-- Channels Grid -->
-        <div class="channel-grid" id="channelsGrid"></div>
-
-        <!-- Empty State -->
-        <div id="emptyState" class="error-state" style="display: none;">
-            <div class="error-icon">📭</div>
-            <p>No se encontraron canales</p>
-        </div>
-    </div>
-
-    <!-- Settings Button -->
-    <button class="btn-floating" id="settingsBtn">⚙️</button>
-
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="settings-modal">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h3>Cargar lista IPTV personalizada</h3>
-                <p>Pega tu lista M3U o enlaces IPTV</p>
-            </div>
-            <div class="settings-body">
-                <textarea id="iptvInput" class="settings-textarea" placeholder="#EXTINF:-1, Nombre del Canal&#10;http://enlace-del-stream.m3u8&#10;&#10;#EXTINF:-1, Otro Canal&#10;http://otro-enlace.m3u8"></textarea>
-            </div>
-            <div class="settings-footer">
-                <button id="loadBtn" class="btn btn-primary">Cargar</button>
-                <button id="closeBtn" class="btn btn-secondary">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const channels = [
-            // Señal Abierta Perú
-            { name: 'TV Perú', url: 'https://cdnhd.xyz/tvperu', category: 'peru', icon: '📺', desc: 'Canal estatal peruano' },
-            { name: 'Latina', url: 'https://cdnhd.xyz/latina', category: 'peru', icon: '📺', desc: 'Televisión Latina' },
-            { name: 'América TV', url: 'https://cdnhd.xyz/americatv', category: 'peru', icon: '📺', desc: 'Canal América TV' },
-            { name: 'Panamericana', url: 'https://cdnhd.xyz/panamericana', category: 'peru', icon: '📺', desc: 'Panamericana Televisión' },
-            { name: 'ATV', url: 'https://cdnhd.xyz/atv', category: 'peru', icon: '📺', desc: 'ATV Perú' },
-            { name: 'RPP TV', url: 'https://cdnhd.xyz/rpptv', category: 'peru', icon: '📺', desc: 'RPP Televisión' },
-
-            // Noticias
-            { name: 'France 24', url: 'https://static.france24.com/live/F24_ES_LO.m3u8', category: 'noticias', icon: '📰', desc: 'Noticias internacionales' },
-            { name: 'DW en Español', url: 'https://dw-1.akamaized.net/master.m3u8', category: 'noticias', icon: '📰', desc: 'Deutsche Welle' },
-            { name: 'BBC News', url: 'https://bbcmedia.akamaized.net/bbc_mundo/live/hls/master.m3u8', category: 'noticias', icon: '📰', desc: 'BBC Mundo' },
-            { name: 'CNN En Español', url: 'https://cnnlive-hd-1.akamaized.net/hls/live/622512/cnnlivelatam/master.m3u8', category: 'noticias', icon: '📰', desc: 'Noticias CNN' },
-
-            // Deportes
-            { name: 'ESPN', url: 'https://stream.sportstv.online/espn/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Deportes ESPN' },
-            { name: 'FOX Sports', url: 'https://stream.sportstv.online/foxsports/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Fútbol y deportes' },
-            { name: 'TNT Sports', url: 'https://stream.sportstv.online/tnt/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Transmisiones deportivas' },
-            { name: 'Eurosport', url: 'https://eurosport-hls.akamaized.net/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Eventos europeos' },
-
-            // Entretenimiento
-            { name: 'Miramax', url: 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'Cine y entretenimiento' },
-            { name: 'HBO', url: 'https://hbo-hls.akamaized.net/hbo/master.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'HBO Latinoamérica' },
-            { name: 'Disney Channel', url: 'https://disneychannel-hls.akamaized.net/disneychannel/master.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'Disney Channel' },
-            { name: 'Cartoon Network', url: 'https://cartoon-hls.akamaized.net/cartoon/master.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'Dibujos animados' },
-
-            // Internacional
-            { name: 'Euronews', url: 'https://euronews-live.akamaized.net/es.m3u8', category: 'internacional', icon: '🌍', desc: 'Noticias europeas' },
-            { name: 'Aljazeera', url: 'https://live-hls-web-aje.getaj.net/AJE/index.m3u8', category: 'internacional', icon: '🌍', desc: 'Al Jazeera' },
-            { name: 'TV5 Monde', url: 'https://tv5mondeplus-i.akamaized.net/hls/live/631786/tv5mondeplus/index.m3u8', category: 'internacional', icon: '🌍', desc: 'Televisión francesa' },
-            { name: 'NHK World', url: 'https://nhkwlive-xjp.akamaized.net/hls/live/2003458/nhkwlive-xjp/index.m3u8', category: 'internacional', icon: '🌍', desc: 'NHK Japón' }
-        ];
-
-        let customChannels = [];
-        let currentCategory = 'todos';
-        let currentChannel = null;
-        let hlsInstance = null;
-
-        const grid = document.getElementById('channelsGrid');
-        const searchInput = document.getElementById('searchInput');
-        const categoryBtns = document.querySelectorAll('.category-btn');
-        const settingsBtn = document.getElementById('settingsBtn');
-        const settingsModal = document.getElementById('settingsModal');
-        const loadBtn = document.getElementById('loadBtn');
-        const closeBtn = document.getElementById('closeBtn');
-        const iptvInput = document.getElementById('iptvInput');
-        const emptyState = document.getElementById('emptyState');
-
-        function renderChannels() {
-            const allChannels = [...channels, ...customChannels];
-            const search = searchInput.value.toLowerCase();
-            const filtered = allChannels.filter(ch => {
-                const matchesCategory = currentCategory === 'todos' || ch.category === currentCategory;
-                const matchesSearch = ch.name.toLowerCase().includes(search) || ch.desc.toLowerCase().includes(search);
-                return matchesCategory && matchesSearch;
-            });
-
-            grid.innerHTML = filtered.map(ch => `
-                <div class="channel-card ${currentChannel?.name === ch.name ? 'playing' : ''}" onclick="playChannel('${ch.url.replace(/'/g, "\\'")}', '${ch.name.replace(/'/g, "\\'")}', '${ch.desc.replace(/'/g, "\\'")}')">
-                    <div class="channel-thumbnail">${ch.icon}</div>
-                    <div class="channel-info">
-                        <div class="channel-name">${ch.name}</div>
-                        <div class="channel-category">${ch.category}</div>
-                        <div class="play-indicator">● EN VIVO</div>
-                    </div>
-                </div>
-            `).join('');
-
-            emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
-        }
-
-        function playChannel(url, name, desc) {
-            currentChannel = { name, url, desc };
-            document.getElementById('channelTitle').textContent = name;
-            document.getElementById('channelDesc').textContent = desc;
-
-            const playerContent = document.getElementById('playerContent');
-            playerContent.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
-
-            setTimeout(() => {
-                if (!window.Hls) {
-                    playerContent.innerHTML = `<video controls autoplay style="width:100%;height:100%;"><source src="${url}" type="application/x-mpegURL"></video>`;
-                    return;
-                }
-
-                playerContent.innerHTML = `<video id="hls-video" controls autoplay style="width:100%;height:100%;"></video>`;
-                const video = document.getElementById('hls-video');
-
-                if (window.Hls.isSupported()) {
-                    if (hlsInstance) hlsInstance.destroy();
-                    hlsInstance = new window.Hls({ debug: false, enableWorker: true, lowLatencyMode: true });
-                    hlsInstance.loadSource(url);
-                    hlsInstance.attachMedia(video);
-                    hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-                    hlsInstance.on(window.Hls.Events.ERROR, () => {
-                        playerContent.innerHTML = '<div class="error-state"><div class="error-icon">⚠️</div><p>Error al cargar el stream</p></div>';
-                    });
-                } else {
-                    video.src = url;
-                    video.play().catch(() => {});
-                }
-            }, 300);
-
-            renderChannels();
-        }
-
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.dataset.category;
-                renderChannels();
-            });
-        });
-
-        searchInput.addEventListener('input', renderChannels);
-
-        settingsBtn.addEventListener('click', () => {
-            settingsModal.classList.add('open');
-        });
-
-        closeBtn.addEventListener('click', () => {
-            settingsModal.classList.remove('open');
-        });
-
-        settingsModal.addEventListener('click', (e) => {
-            if (e.target === settingsModal) {
-                settingsModal.classList.remove('open');
-            }
-        });
-
-        loadBtn.addEventListener('click', () => {
-            const input = iptvInput.value.trim();
-            if (!input) return;
-
-            customChannels = [];
-            const lines = input.split('\n');
-            let currentName = '';
-
-            lines.forEach(line => {
-                line = line.trim();
-                if (line.startsWith('#EXTINF:')) {
-                    currentName = line.split(',').pop().trim();
-                } else if (line && !line.startsWith('#') && line.includes('http')) {
-                    if (currentName) {
-                        customChannels.push({ name: currentName, url: line, category: 'personalizado', icon: '📺', desc: 'Canal personalizado' });
-                    } else {
-                        customChannels.push({ name: `Canal ${customChannels.length + 1}`, url: line, category: 'personalizado', icon: '📺', desc: 'Canal personalizado' });
-                    }
-                    currentName = '';
-                }
-            });
-
-            iptvInput.value = '';
-            settingsModal.classList.remove('open');
-            renderChannels();
-        });
-
-        window.addEventListener('load', () => {
-            renderChannels();
-            setTimeout(() => playChannel(channels[0].url, channels[0].name, channels[0].desc), 500);
-        });
-    </script>
-</body>
-</html>
+            background: #
