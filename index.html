@@ -7,158 +7,491 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
+        :root {
+            --color-bg-base: #0a0f1d;
+            --color-bg-elevated: #0f1420;
+            --color-bg-surface: #151d2e;
+            --color-border: #1f2937;
+            --color-text-primary: #ffffff;
+            --color-text-secondary: #d1d5db;
+            --color-text-muted: #9ca3af;
+            --color-accent-orange: #ff7a00;
+            --color-accent-orange-dark: #e66f00;
+            --color-accent-orange-light: #ffa500;
+        }
+
         * {
             scrollbar-width: thin;
-            scrollbar-color: rgba(139, 92, 246, 0.5) rgba(15, 23, 42, 0.5);
+            scrollbar-color: var(--color-accent-orange) var(--color-bg-base);
         }
+
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.5);
+            background: var(--color-bg-base);
         }
+
         ::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.5);
+            background: var(--color-accent-orange);
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.7);
+            background: var(--color-accent-orange-light);
         }
-        .channel-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1rem;
+
+        body {
+            background: linear-gradient(135deg, var(--color-bg-base) 0%, #0d1218 100%);
+            color: var(--color-text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
         }
-        @media (max-width: 768px) {
-            .channel-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
+
+        .navbar {
+            background: rgba(10, 15, 29, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-        @media (max-width: 480px) {
-            .channel-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-accent-orange) 0%, #ff9500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
         }
+
+        .search-input {
+            background: var(--color-bg-surface);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            max-width: 300px;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-accent-orange);
+            background: var(--color-bg-elevated);
+            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .category-btn {
+            padding: 0.6rem 1.25rem;
+            background: var(--color-bg-surface);
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .category-btn:hover {
+            background: var(--color-bg-elevated);
+            border-color: var(--color-accent-orange);
+            color: var(--color-text-primary);
+        }
+
+        .category-btn.active {
+            background: var(--color-accent-orange);
+            color: #000;
+            border-color: var(--color-accent-orange);
+        }
+
+        .player-wrapper {
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
         .video-container {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
             background: #000;
-            border-radius: 0.75rem;
             overflow: hidden;
         }
-        .video-container video {
+
+        .video-container video,
+        .video-container iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
         }
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
+
+        .loading-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: var(--color-text-muted);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--color-border);
+            border-top: 3px solid var(--color-accent-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-        .channel-item {
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .channel-card {
+            background: var(--color-bg-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            cursor: pointer;
             transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            flex-direction: column;
         }
-        .channel-item:hover {
+
+        .channel-card:hover {
+            border-color: var(--color-accent-orange);
             transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255, 122, 0, 0.15);
+        }
+
+        .channel-card.playing {
+            border-color: var(--color-accent-orange);
+            box-shadow: 0 0 16px rgba(255, 122, 0, 0.3), inset 0 0 0 2px var(--color-accent-orange);
+        }
+
+        .channel-thumbnail {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, rgba(255, 122, 0, 0.1) 0%, rgba(255, 122, 0, 0.05) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--color-accent-orange);
+        }
+
+        .channel-info {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .channel-name {
+            font-weight: 700;
+            color: var(--color-text-primary);
+            font-size: 0.95rem;
+            line-height: 1.2;
+        }
+
+        .channel-category {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .play-indicator {
+            font-size: 0.8rem;
+            color: var(--color-accent-orange);
+            font-weight: 600;
+            margin-top: auto;
+        }
+
+        .settings-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .settings-modal.open {
+            display: flex;
+        }
+
+        .settings-content {
+            background: var(--color-bg-elevated);
+            border: 1px solid var(--color-border);
+            border-radius: 0.75rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .settings-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .settings-header p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .settings-body {
+            padding: 1.5rem;
+        }
+
+        .settings-textarea {
+            width: 100%;
+            height: 200px;
+            background: var(--color-bg-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 0.5rem;
+            color: var(--color-text-primary);
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        .settings-textarea:focus {
+            outline: none;
+            border-color: var(--color-accent-orange);
+            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.1);
+        }
+
+        .settings-textarea::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        .settings-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--color-accent-orange);
+            color: #000;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent-orange-light);
+            box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--color-bg-surface);
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-border);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-border);
+            color: var(--color-text-primary);
+        }
+
+        .btn-floating {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--color-accent-orange);
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(255, 122, 0, 0.3);
+            transition: all 0.3s;
+            z-index: 40;
+        }
+
+        .btn-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 32px rgba(255, 122, 0, 0.4);
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--color-text-muted);
+        }
+
+        .error-state .error-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .channel-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .search-input {
+                max-width: 100%;
+            }
+
+            .category-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .btn-floating {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .channel-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .navbar {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .settings-content {
+                border-radius: 1rem 1rem 0 0;
+                max-height: 90vh;
+            }
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100">
+<body>
     <!-- Navbar -->
-    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+    <nav class="navbar sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-3">
-                    <div class="text-2xl font-bold bg-gradient-to-r from-purple-500 to-cyan-500 bg-clip-text text-transparent">
-                        ▶ PerúStream TV
-                    </div>
-                </div>
-                <div class="flex-1 max-w-md mx-4">
-                    <input type="text" id="searchInput" placeholder="Buscar canal..." class="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20">
-                </div>
-                <button id="settingsBtn" class="p-2 hover:bg-slate-800 rounded-lg transition text-lg">
-                    ⚙️
-                </button>
+            <div class="flex items-center justify-between gap-4 py-4 flex-wrap">
+                <div class="logo">▶ PerúStream TV</div>
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar canal...">
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <!-- Player Section -->
-        <div class="mb-8">
-            <div class="bg-slate-900 rounded-lg border border-slate-800 overflow-hidden">
-                <div class="aspect-video bg-black rounded-lg mb-4 relative">
-                    <div id="playerContainer" class="w-full h-full flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="w-16 h-16 border-4 border-slate-700 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-                            <p class="text-slate-400">Selecciona un canal para reproducir</p>
-                        </div>
-                    </div>
+        <div class="player-wrapper">
+            <div class="video-container">
+                <div id="playerContent" class="loading-state">
+                    <div class="spinner"></div>
                 </div>
-                <div class="px-6 py-4 border-t border-slate-800">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 id="channelTitle" class="text-xl font-bold text-slate-100">Esperando selección...</h2>
-                        <span id="liveStatus" class="px-3 py-1 bg-red-900/30 text-red-400 rounded text-sm font-semibold">EN VIVO</span>
+            </div>
+            <div style="background: var(--color-bg-surface); padding: 1.25rem; border-top: 1px solid var(--color-border);">
+                <div class="flex justify-between items-start gap-3 mb-3">
+                    <div>
+                        <div id="channelTitle" style="font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 0.25rem;">Selecciona un canal</div>
+                        <div id="channelDesc" style="color: var(--color-text-muted); font-size: 0.9rem;">Elige un canal de la lista para comenzar</div>
                     </div>
-                    <p id="channelDesc" class="text-slate-400 text-sm">Selecciona un canal de la lista para comenzar a reproducir</p>
+                    <span style="background: rgba(255, 122, 0, 0.15); color: var(--color-accent-orange); padding: 0.4rem 0.8rem; border-radius: 0.35rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">EN VIVO</span>
                 </div>
             </div>
         </div>
 
         <!-- Categories -->
-        <div class="mb-8">
-            <div class="flex gap-2 overflow-x-auto pb-2">
-                <button class="category-btn px-4 py-2 bg-purple-600 text-white rounded-lg font-medium whitespace-nowrap transition hover:bg-purple-700" data-category="todos">
-                    Todos
-                </button>
-                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="peru">
-                    Señal Abierta Perú
-                </button>
-                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="noticias">
-                    Noticias
-                </button>
-                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="entretenimiento">
-                    Entretenimiento
-                </button>
-                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="deportes">
-                    Deportes
-                </button>
-                <button class="category-btn px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium whitespace-nowrap transition" data-category="internacional">
-                    Internacional
-                </button>
+        <div style="overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem;">
+            <div style="display: flex; gap: 0.75rem; min-width: min-content;">
+                <button class="category-btn active" data-category="todos">Todos</button>
+                <button class="category-btn" data-category="peru">Señal Abierta Perú</button>
+                <button class="category-btn" data-category="noticias">Noticias</button>
+                <button class="category-btn" data-category="deportes">Deportes</button>
+                <button class="category-btn" data-category="entretenimiento">Entretenimiento</button>
+                <button class="category-btn" data-category="internacional">Internacional</button>
             </div>
         </div>
 
         <!-- Channels Grid -->
-        <div id="channelsContainer" class="channel-grid">
-            <!-- Canales se cargarán aquí -->
+        <div class="channel-grid" id="channelsGrid"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="error-state" style="display: none;">
+            <div class="error-icon">📭</div>
+            <p>No se encontraron canales</p>
         </div>
     </div>
 
+    <!-- Settings Button -->
+    <button class="btn-floating" id="settingsBtn">⚙️</button>
+
     <!-- Settings Modal -->
-    <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur flex items-center justify-center p-4">
-        <div class="bg-slate-900 rounded-lg border border-slate-800 w-full max-w-md">
-            <div class="p-6 border-b border-slate-800">
-                <h3 class="text-xl font-bold text-slate-100">Cargar lista IPTV personalizada</h3>
-                <p class="text-slate-400 text-sm mt-1">Pega tu lista M3U o enlaces IPTV</p>
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3>Cargar lista IPTV personalizada</h3>
+                <p>Pega tu lista M3U o enlaces IPTV</p>
             </div>
-            <div class="p-6">
-                <textarea id="iptvInput" placeholder="Ejemplo:&#10;#EXTINF:-1, Canal Nombre&#10;http://link.m3u8&#10;&#10;o solo pega uno por línea" class="w-full h-32 bg-slate-800 border border-slate-700 rounded-lg p-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 font-mono text-sm resize-none"></textarea>
+            <div class="settings-body">
+                <textarea id="iptvInput" class="settings-textarea" placeholder="#EXTINF:-1, Nombre del Canal&#10;http://enlace-del-stream.m3u8&#10;&#10;#EXTINF:-1, Otro Canal&#10;http://otro-enlace.m3u8"></textarea>
             </div>
-            <div class="p-6 border-t border-slate-800 flex gap-3">
-                <button id="loadIptvBtn" class="flex-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
-                    Cargar
-                </button>
-                <button id="closeSettingsBtn" class="flex-1 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg font-medium transition">
-                    Cerrar
-                </button>
+            <div class="settings-footer">
+                <button id="loadBtn" class="btn btn-primary">Cargar</button>
+                <button id="closeBtn" class="btn btn-secondary">Cerrar</button>
             </div>
         </div>
     </div>
@@ -166,87 +499,91 @@
     <script>
         const channels = [
             // Señal Abierta Perú
-            { name: 'TV Perú', url: 'https://cdnhd.xyz/tvperu', category: 'peru', description: 'Canal estatal peruano' },
-            { name: 'Latina', url: 'https://cdnhd.xyz/latina', category: 'peru', description: 'Televisión Latina' },
-            { name: 'América TV', url: 'https://cdnhd.xyz/americatv', category: 'peru', description: 'Canal América TV' },
-            { name: 'Panamericana', url: 'https://cdnhd.xyz/panamericana', category: 'peru', description: 'Panamericana Televisión' },
-            { name: 'ATV', url: 'https://cdnhd.xyz/atv', category: 'peru', description: 'ATV Perú' },
-            { name: 'RPP TV', url: 'https://cdnhd.xyz/rpptv', category: 'peru', description: 'RPP Televisión' },
-            
+            { name: 'TV Perú', url: 'https://cdnhd.xyz/tvperu', category: 'peru', icon: '📺', desc: 'Canal estatal peruano' },
+            { name: 'Latina', url: 'https://cdnhd.xyz/latina', category: 'peru', icon: '📺', desc: 'Televisión Latina' },
+            { name: 'América TV', url: 'https://cdnhd.xyz/americatv', category: 'peru', icon: '📺', desc: 'Canal América TV' },
+            { name: 'Panamericana', url: 'https://cdnhd.xyz/panamericana', category: 'peru', icon: '📺', desc: 'Panamericana Televisión' },
+            { name: 'ATV', url: 'https://cdnhd.xyz/atv', category: 'peru', icon: '📺', desc: 'ATV Perú' },
+            { name: 'RPP TV', url: 'https://cdnhd.xyz/rpptv', category: 'peru', icon: '📺', desc: 'RPP Televisión' },
+
             // Noticias
-            { name: 'France 24', url: 'https://static.france24.com/live/F24_ES_LO.m3u8', category: 'noticias', description: 'Noticias internacionales' },
-            { name: 'DW en Español', url: 'https://dw-1.akamaized.net/master.m3u8', category: 'noticias', description: 'Deutsche Welle' },
-            { name: 'BBC News', url: 'https://bbcmedia.akamaized.net/bbc_mundo/live/hls/master.m3u8', category: 'noticias', description: 'BBC Mundo' },
-            { name: 'CNN En Español', url: 'https://cnnlive-hd-1.akamaized.net/hls/live/622512/cnnlivelatam/master.m3u8', category: 'noticias', description: 'Noticias CNN' },
-            
-            // Entretenimiento
-            { name: 'Miramax', url: 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8', category: 'entretenimiento', description: 'Cine y entretenimiento' },
-            { name: 'HBO', url: 'https://hbo-hls.akamaized.net/hbo/master.m3u8', category: 'entretenimiento', description: 'HBO Latinoamérica' },
-            { name: 'Disney Channel', url: 'https://disneychannel-hls.akamaized.net/disneychannel/master.m3u8', category: 'entretenimiento', description: 'Disney Channel' },
-            { name: 'Cartoon Network', url: 'https://cartoon-hls.akamaized.net/cartoon/master.m3u8', category: 'entretenimiento', description: 'Dibujos animados' },
-            
+            { name: 'France 24', url: 'https://static.france24.com/live/F24_ES_LO.m3u8', category: 'noticias', icon: '📰', desc: 'Noticias internacionales' },
+            { name: 'DW en Español', url: 'https://dw-1.akamaized.net/master.m3u8', category: 'noticias', icon: '📰', desc: 'Deutsche Welle' },
+            { name: 'BBC News', url: 'https://bbcmedia.akamaized.net/bbc_mundo/live/hls/master.m3u8', category: 'noticias', icon: '📰', desc: 'BBC Mundo' },
+            { name: 'CNN En Español', url: 'https://cnnlive-hd-1.akamaized.net/hls/live/622512/cnnlivelatam/master.m3u8', category: 'noticias', icon: '📰', desc: 'Noticias CNN' },
+
             // Deportes
-            { name: 'ESPN', url: 'https://stream.sportstv.online/espn/index.m3u8', category: 'deportes', description: 'Deportes ESPN' },
-            { name: 'FOX Sports', url: 'https://stream.sportstv.online/foxsports/index.m3u8', category: 'deportes', description: 'Fútbol y deportes' },
-            { name: 'TNT Sports', url: 'https://stream.sportstv.online/tnt/index.m3u8', category: 'deportes', description: 'Transmisiones deportivas' },
-            { name: 'Eurosport', url: 'https://eurosport-hls.akamaized.net/index.m3u8', category: 'deportes', description: 'Eventos europeos' },
-            
+            { name: 'ESPN', url: 'https://stream.sportstv.online/espn/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Deportes ESPN' },
+            { name: 'FOX Sports', url: 'https://stream.sportstv.online/foxsports/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Fútbol y deportes' },
+            { name: 'TNT Sports', url: 'https://stream.sportstv.online/tnt/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Transmisiones deportivas' },
+            { name: 'Eurosport', url: 'https://eurosport-hls.akamaized.net/index.m3u8', category: 'deportes', icon: '⚽', desc: 'Eventos europeos' },
+
+            // Entretenimiento
+            { name: 'Miramax', url: 'https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'Cine y entretenimiento' },
+            { name: 'HBO', url: 'https://hbo-hls.akamaized.net/hbo/master.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'HBO Latinoamérica' },
+            { name: 'Disney Channel', url: 'https://disneychannel-hls.akamaized.net/disneychannel/master.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'Disney Channel' },
+            { name: 'Cartoon Network', url: 'https://cartoon-hls.akamaized.net/cartoon/master.m3u8', category: 'entretenimiento', icon: '🎬', desc: 'Dibujos animados' },
+
             // Internacional
-            { name: 'Euronews', url: 'https://euronews-live.akamaized.net/es.m3u8', category: 'internacional', description: 'Noticias europeas' },
-            { name: 'Aljazeera', url: 'https://live-hls-web-aje.getaj.net/AJE/index.m3u8', category: 'internacional', description: 'Al Jazeera' },
-            { name: 'TV5 Monde', url: 'https://tv5mondeplus-i.akamaized.net/hls/live/631786/tv5mondeplus/index.m3u8', category: 'internacional', description: 'Televisión francesa' },
-            { name: 'NHK World', url: 'https://nhkwlive-xjp.akamaized.net/hls/live/2003458/nhkwlive-xjp/index.m3u8', category: 'internacional', description: 'NHK Japón' }
+            { name: 'Euronews', url: 'https://euronews-live.akamaized.net/es.m3u8', category: 'internacional', icon: '🌍', desc: 'Noticias europeas' },
+            { name: 'Aljazeera', url: 'https://live-hls-web-aje.getaj.net/AJE/index.m3u8', category: 'internacional', icon: '🌍', desc: 'Al Jazeera' },
+            { name: 'TV5 Monde', url: 'https://tv5mondeplus-i.akamaized.net/hls/live/631786/tv5mondeplus/index.m3u8', category: 'internacional', icon: '🌍', desc: 'Televisión francesa' },
+            { name: 'NHK World', url: 'https://nhkwlive-xjp.akamaized.net/hls/live/2003458/nhkwlive-xjp/index.m3u8', category: 'internacional', icon: '🌍', desc: 'NHK Japón' }
         ];
 
         let customChannels = [];
         let currentCategory = 'todos';
+        let currentChannel = null;
         let hlsInstance = null;
 
+        const grid = document.getElementById('channelsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const loadBtn = document.getElementById('loadBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const iptvInput = document.getElementById('iptvInput');
+        const emptyState = document.getElementById('emptyState');
+
         function renderChannels() {
-            const container = document.getElementById('channelsContainer');
             const allChannels = [...channels, ...customChannels];
-            const filtered = currentCategory === 'todos' 
-                ? allChannels 
-                : allChannels.filter(ch => ch.category === currentCategory);
+            const search = searchInput.value.toLowerCase();
+            const filtered = allChannels.filter(ch => {
+                const matchesCategory = currentCategory === 'todos' || ch.category === currentCategory;
+                const matchesSearch = ch.name.toLowerCase().includes(search) || ch.desc.toLowerCase().includes(search);
+                return matchesCategory && matchesSearch;
+            });
 
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const searched = filtered.filter(ch => 
-                ch.name.toLowerCase().includes(searchTerm) || 
-                ch.description.toLowerCase().includes(searchTerm)
-            );
-
-            container.innerHTML = searched.map((channel, index) => `
-                <div class="channel-item bg-slate-900 rounded-lg border border-slate-800 overflow-hidden hover:border-purple-500 cursor-pointer" onclick="playChannel('${channel.url.replace(/'/g, "\\'")}', '${channel.name.replace(/'/g, "\\'")}', '${channel.description.replace(/'/g, "\\'")}')">
-                    <div class="aspect-square bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center">
-                        <span class="text-4xl">📺</span>
-                    </div>
-                    <div class="p-3">
-                        <h3 class="font-bold text-slate-100 truncate">${channel.name}</h3>
-                        <p class="text-xs text-slate-400 truncate">${channel.description}</p>
-                        <div class="mt-2 text-xs font-semibold text-red-400">● EN VIVO</div>
+            grid.innerHTML = filtered.map(ch => `
+                <div class="channel-card ${currentChannel?.name === ch.name ? 'playing' : ''}" onclick="playChannel('${ch.url.replace(/'/g, "\\'")}', '${ch.name.replace(/'/g, "\\'")}', '${ch.desc.replace(/'/g, "\\'")}')">
+                    <div class="channel-thumbnail">${ch.icon}</div>
+                    <div class="channel-info">
+                        <div class="channel-name">${ch.name}</div>
+                        <div class="channel-category">${ch.category}</div>
+                        <div class="play-indicator">● EN VIVO</div>
                     </div>
                 </div>
             `).join('');
 
-            if (searched.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-slate-400">No se encontraron canales</p></div>';
-            }
+            emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
         }
 
-        function playChannel(url, name, description) {
-            const container = document.getElementById('playerContainer');
+        function playChannel(url, name, desc) {
+            currentChannel = { name, url, desc };
             document.getElementById('channelTitle').textContent = name;
-            document.getElementById('channelDesc').textContent = description;
+            document.getElementById('channelDesc').textContent = desc;
 
-            container.innerHTML = `<div class="w-full h-full flex items-center justify-center"><div class="text-center"><div class="w-16 h-16 border-4 border-slate-700 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div><p class="text-slate-400">Cargando ${name}...</p></div></div>`;
+            const playerContent = document.getElementById('playerContent');
+            playerContent.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
 
             setTimeout(() => {
                 if (!window.Hls) {
-                    container.innerHTML = `<video controls autoplay style="width:100%;height:100%;"><source src="${url}" type="application/x-mpegURL"></video>`;
+                    playerContent.innerHTML = `<video controls autoplay style="width:100%;height:100%;"><source src="${url}" type="application/x-mpegURL"></video>`;
                     return;
                 }
 
-                container.innerHTML = `<video id="hls-video" controls autoplay style="width:100%;height:100%;"></video>`;
+                playerContent.innerHTML = `<video id="hls-video" controls autoplay style="width:100%;height:100%;"></video>`;
                 const video = document.getElementById('hls-video');
 
                 if (window.Hls.isSupported()) {
@@ -255,40 +592,45 @@
                     hlsInstance.loadSource(url);
                     hlsInstance.attachMedia(video);
                     hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-                    hlsInstance.on(window.Hls.Events.ERROR, (event, data) => {
-                        if (data.fatal) container.innerHTML = `<div class="flex items-center justify-center w-full h-full text-red-400"><p>Error al cargar el stream</p></div>`;
+                    hlsInstance.on(window.Hls.Events.ERROR, () => {
+                        playerContent.innerHTML = '<div class="error-state"><div class="error-icon">⚠️</div><p>Error al cargar el stream</p></div>';
                     });
                 } else {
                     video.src = url;
                     video.play().catch(() => {});
                 }
             }, 300);
+
+            renderChannels();
         }
 
-        // Event Listeners
-        document.querySelectorAll('.category-btn').forEach(btn => {
+        categoryBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('bg-purple-600', 'text-white'));
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.add('bg-slate-800', 'text-slate-300'));
-                btn.classList.remove('bg-slate-800', 'text-slate-300');
-                btn.classList.add('bg-purple-600', 'text-white');
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
                 currentCategory = btn.dataset.category;
                 renderChannels();
             });
         });
 
-        document.getElementById('searchInput').addEventListener('input', renderChannels);
+        searchInput.addEventListener('input', renderChannels);
 
-        document.getElementById('settingsBtn').addEventListener('click', () => {
-            document.getElementById('settingsModal').classList.toggle('hidden');
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('open');
         });
 
-        document.getElementById('closeSettingsBtn').addEventListener('click', () => {
-            document.getElementById('settingsModal').classList.add('hidden');
+        closeBtn.addEventListener('click', () => {
+            settingsModal.classList.remove('open');
         });
 
-        document.getElementById('loadIptvBtn').addEventListener('click', () => {
-            const input = document.getElementById('iptvInput').value.trim();
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('open');
+            }
+        });
+
+        loadBtn.addEventListener('click', () => {
+            const input = iptvInput.value.trim();
             if (!input) return;
 
             customChannels = [];
@@ -299,26 +641,4 @@
                 line = line.trim();
                 if (line.startsWith('#EXTINF:')) {
                     currentName = line.split(',').pop().trim();
-                } else if (line && !line.startsWith('#') && line.includes('http')) {
-                    if (currentName) {
-                        customChannels.push({ name: currentName, url: line, category: 'personalizado', description: 'Canal personalizado' });
-                    } else {
-                        customChannels.push({ name: `Canal ${customChannels.length + 1}`, url: line, category: 'personalizado', description: 'Canal personalizado' });
-                    }
-                    currentName = '';
-                }
-            });
-
-            document.getElementById('iptvInput').value = '';
-            document.getElementById('settingsModal').classList.add('hidden');
-            renderChannels();
-        });
-
-        // Cargar primer canal al iniciar
-        window.addEventListener('load', () => {
-            renderChannels();
-            setTimeout(() => playChannel(channels[0].url, channels[0].name, channels[0].description), 500);
-        });
-    </script>
-</body>
-</html>
+                } else if (line && !line.startsWith('#')
