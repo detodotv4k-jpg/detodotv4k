@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PerúStream TV</title>
+    <title>PerúStream TV - Global & IPTV</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- HLS.js para reproducción de streaming m3u8 -->
@@ -55,7 +55,7 @@
             <h3 class="text-lg font-bold text-orange-500">Agregar Canal IPTV Personalizado</h3>
             <p class="text-xs text-gray-400">Pega un enlace directo de streaming en formato .m3u8 para sumarlo al instante a tu parrilla.</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <input type="text" id="customName" placeholder="Nombre del Canal (Ej. Canal Local)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
+                <input type="text" id="customName" placeholder="Nombre del Canal" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
                 <input type="text" id="customCategoryInput" placeholder="Categoría (Ej. Cine, Noticias)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
                 <input type="text" id="customUrl" placeholder="URL del Stream (.m3u8)" class="bg-black border border-gray-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-orange-500">
             </div>
@@ -68,14 +68,14 @@
         <!-- Categorías -->
         <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none" id="categoryContainer">
             <button onclick="filterCategory('Todos')" class="cat-btn bg-orange-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap">Todos</button>
-            <button onclick="filterCategory('Cine y Series')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Cine y Series</button>
-            <button onclick="filterCategory('Noticias')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Noticias</button>
+            <button onclick="filterCategory('Cine y Entretenimiento')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Cine y Entretenimiento</button>
+            <button onclick="filterCategory('Noticias Globales')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Noticias Globales</button>
             <button onclick="filterCategory('Internacional')" class="cat-btn bg-gray-900 text-gray-300 hover:bg-gray-800 px-4 py-2 rounded-lg text-sm font-semibold transition whitespace-nowrap border border-gray-800">Internacional</button>
         </div>
 
         <!-- Parrilla de Canales -->
         <div>
-            <h3 class="text-lg font-bold mb-4 text-white">Canales Disponibles en Español</h3>
+            <h3 class="text-lg font-bold mb-4 text-white">Canales Globales y Miramax TV</h3>
             <div id="channelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 <!-- Se inyecta por JavaScript -->
             </div>
@@ -87,26 +87,26 @@
     <script>
         let channels = [
             {
-                name: "MiraMax (Cine)",
-                category: "Cine y Series",
-                url: "https://amc-absolutereality-1-us.plex.wurl.tv/playlist.m3u8",
+                name: "MiraMax TV",
+                category: "Cine y Entretenimiento",
+                url: "https://vs20.live.opencaster.com/miramaxtv2026_b6128ab1/index.m3u8",
                 logo: "🎬"
             },
             {
                 name: "DW en Español",
-                category: "Internacional",
+                category: "Noticias Globales",
                 url: "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8",
                 logo: "🌍"
             },
             {
                 name: "France 24 Español",
-                category: "Noticias",
+                category: "Noticias Globales",
                 url: "https://static.france24.com/live/F24_ES_HI_HLS/live_web.m3u8",
                 logo: "📡"
             },
             {
                 name: "RT en Español",
-                category: "Noticias",
+                category: "Noticias Globales",
                 url: "https://rt-esp.gcdn.co/live/rtesp/playlist.m3u8",
                 logo: "📰"
             },
@@ -118,7 +118,7 @@
             },
             {
                 name: "TeleSUR TV",
-                category: "Noticias",
+                category: "Noticias Globales",
                 url: "https://venturatt.tv/hls/telesur/index.m3u8",
                 logo: "🛰️"
             }
@@ -199,7 +199,7 @@
 
         function addCustomChannel() {
             const name = document.getElementById('customName').value.trim();
-            const category = document.getElementById('customCategoryInput').value.trim() || 'Cine y Series';
+            const category = document.getElementById('customCategoryInput').value.trim() || 'Internacional';
             const url = document.getElementById('customUrl').value.trim();
 
             if (!name || !url) {
